@@ -1,0 +1,203 @@
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname DHCP-SERVER
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$/HGX$UaDeBGUhfXFcqXG0fnjLI1
+!
+no aaa new-model
+memory-size iomem 5
+!
+dot11 syslog
+ip source-route
+!
+!
+ip cef
+ip dhcp excluded-address 172.20.7.105
+ip dhcp excluded-address 172.20.7.109
+ip dhcp excluded-address 172.20.7.65
+ip dhcp excluded-address 172.20.7.66
+ip dhcp excluded-address 172.20.7.106
+ip dhcp excluded-address 172.20.7.1
+ip dhcp excluded-address 172.20.7.67
+ip dhcp excluded-address 172.20.7.33
+ip dhcp excluded-address 172.20.4.1
+ip dhcp excluded-address 172.20.5.1
+ip dhcp excluded-address 172.20.0.1
+ip dhcp excluded-address 172.20.6.1
+ip dhcp excluded-address 172.20.7.110
+ip dhcp excluded-address 172.20.7.2
+ip dhcp excluded-address 172.20.7.68
+ip dhcp excluded-address 172.20.7.34
+ip dhcp excluded-address 172.20.4.2
+ip dhcp excluded-address 172.20.5.2
+ip dhcp excluded-address 172.20.2.2
+ip dhcp excluded-address 172.20.6.2
+ip dhcp excluded-address 172.20.7.29
+ip dhcp excluded-address 172.20.7.90
+ip dhcp excluded-address 172.20.7.60
+ip dhcp excluded-address 172.20.4.250
+ip dhcp excluded-address 172.20.5.250
+ip dhcp excluded-address 172.20.1.250
+ip dhcp excluded-address 172.20.3.250
+ip dhcp excluded-address 172.20.6.250
+ip dhcp excluded-address 172.20.7.94
+ip dhcp excluded-address 172.20.7.30
+ip dhcp excluded-address 172.20.3.253
+ip dhcp excluded-address 172.20.6.253
+ip dhcp excluded-address 172.20.7.5
+ip dhcp excluded-address 172.20.7.50
+!
+ip dhcp pool ADMINISTRATION
+   network 172.20.4.0 255.255.255.0
+   default-router 172.20.4.250
+   domain-name isepacademy.ccna.itn.com
+!
+ip dhcp pool STAFF
+   network 172.20.5.0 255.255.255.0
+   default-router 172.20.5.250
+   domain-name isepacademy.ccna.itn.com
+!
+ip dhcp pool VOIP
+   network 172.20.0.0 255.255.254.0
+   default-router 172.20.1.250
+   domain-name isepacademy.ccna.itn.com
+!
+ip dhcp pool WIRELESS-ZG
+   network 172.20.2.0 255.255.254.0
+   default-router 172.20.3.250
+   domain-name isepacademy.ccna.itn.com
+!
+ip dhcp pool GUESTS-ZG
+   network 172.20.6.0 255.255.255.0
+   default-router 172.20.6.250
+   domain-name isepacademy.ccna.itn.com
+!
+!
+!
+no ip domain lookup
+ip domain name isepacademy.ccna.itn.com
+login block-for 300 attempts 3 within 120
+ipv6 unicast-routing
+ipv6 cef
+ipv6 dhcp pool ADMINISTRATION
+ address prefix 2001:A:0:20::/64
+ domain-name isepacademy.ccna.itn.com
+!
+ipv6 dhcp pool STAFF
+ address prefix 2001:A:0:30::/64
+ domain-name isepacademy.ccna.itn.com
+!
+ipv6 dhcp pool VOIP
+ address prefix 2001:A:0:40::/64
+ domain-name isepacademy.ccna.itn.com
+!
+ipv6 dhcp pool WIRELESS-ZG
+ address prefix 2001:A:0:50::/64
+ domain-name isepacademy.ccna.itn.com
+!
+ipv6 dhcp pool GUESTS-ZG
+ address prefix 2001:A:0:60::/64
+ domain-name isepacademy.ccna.itn.com
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+voice-card 0
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO2851 sn FCZ123273WU
+username cisco privilege 15 password 7 00071F071748080A0E325F
+!
+!
+ip ssh time-out 30
+ip ssh version 2
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ ip address 172.20.7.50 255.255.255.224
+ duplex auto
+ speed auto
+ ipv6 address 2001:A:0:10::50/64
+!
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Integrated-Service-Engine1/0
+ no ip address
+ shutdown
+ no keepalive
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip route 0.0.0.0 0.0.0.0 172.20.7.60
+!
+!
+logging esm config
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line 66
+ no activation-character
+ no exec
+ transport preferred none
+ transport input all
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+line vty 0 4
+ exec-timeout 0 30
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end

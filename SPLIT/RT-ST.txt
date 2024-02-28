@@ -1,0 +1,250 @@
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname RT1-ST
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+memory-size iomem 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip dhcp excluded-address 172.20.12.225
+ip dhcp excluded-address 172.20.12.233
+ip dhcp excluded-address 172.20.13.1
+ip dhcp excluded-address 172.20.13.129
+ip dhcp excluded-address 172.20.12.193
+ip dhcp excluded-address 172.20.12.1
+ip dhcp excluded-address 172.20.12.65
+ip dhcp excluded-address 172.20.12.129
+ip dhcp excluded-address 172.20.12.234
+ip dhcp excluded-address 172.20.12.226
+ip dhcp excluded-address 172.20.13.2
+!
+ip dhcp pool STAFF
+ network 172.20.13.0 255.255.255.128
+ default-router 172.20.13.1
+ domain-name isepacademy.ccna.itn.com
+!
+ip dhcp pool WIRELESS
+ network 172.20.13.128 255.255.255.128
+ default-router 172.20.13.129
+ domain-name isepacademy.ccna.itn.com
+!
+ip dhcp pool GUESTS
+ network 172.20.12.192 255.255.255.224
+ default-router 172.20.12.193
+ domain-name isepacademy.ccna.itn.com
+!
+!
+!
+no ip domain lookup
+ip domain name isepacademy.ccna.itn.com
+ip host AP1-Pl 172.20.11.98
+ip host AP1-St 172.20.12.226
+ip host AP1-Zg 172.20.7.5
+ip host DHCP-SRV 172.20.7.50
+ip host MLS1-Zg 172.20.7.67
+ip host SW1-Pl 172.20.11.106
+ip host SW1-St 172.20.12.234
+ip host SW1-Zg 172.20.7.65
+ip host SW2-Zg 172.20.7.66
+ip host VirtualMLS-Zg 172.20.7.95
+ip host WLC1-Zg 172.20.7.94
+ip host AP1-Zgv6 2001:A:0:5::50
+ip host DHCP-SRVv6 2001:A:0:10::50
+ip host MLS1-Zgv6 2001:A:0:6::3
+ip host SW1-Zgv6 2001:A:0:6::1
+ip host SW2-Zgv2 2001:A:0:6::2
+ip host VirtualMLS-Zgv6 2001:A:0:6::F
+ip host WLC1-Zgv6 2001:A:0:6::10
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+cts logging verbose
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FCZ160220UC
+license accept end user agreement
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package uck9
+!
+!
+username cisco privilege 15 secret 5 $1$BTkM$BC1LmlHSxItkgXA6hY5l1/
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description Multimedia LAN
+ ip address 172.20.12.1 255.255.255.192
+!
+interface Loopback1
+ description Design LAN
+ ip address 172.20.12.65 255.255.255.192
+!
+interface Loopback2
+ description Communication LAN
+ ip address 172.20.12.129 255.255.255.192
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.5
+ description VLAN AP
+ encapsulation dot1Q 5
+ ip address 172.20.12.225 255.255.255.248
+!
+interface GigabitEthernet0/1.6
+ description MANAGEMENT VLAN
+ encapsulation dot1Q 6
+ ip address 172.20.12.233 255.255.255.248
+!
+interface GigabitEthernet0/1.30
+ encapsulation dot1Q 30
+ ip address 172.20.13.1 255.255.255.128
+!
+interface GigabitEthernet0/1.50
+ encapsulation dot1Q 50
+ ip address 172.20.13.129 255.255.255.128
+!
+interface GigabitEthernet0/1.60
+ encapsulation dot1Q 60
+ ip address 172.20.12.193 255.255.255.224
+!
+interface GigabitEthernet0/2
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2.103
+ description Connection to RT1-Zg
+ encapsulation dot1Q 103
+ ip address 10.0.0.6 255.255.255.252
+!
+interface GigabitEthernet0/2.203
+ description Connection to RT1-Pl
+ encapsulation dot1Q 203
+ ip address 10.0.0.10 255.255.255.252
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip route 172.20.0.0 255.255.248.0 GigabitEthernet0/2.103
+ip route 172.20.8.0 255.255.252.0 GigabitEthernet0/2.203
+!
+ipv6 route 2001:A::/61 GigabitEthernet0/2.103
+ipv6 route 2001:B::/61 GigabitEthernet0/2.203
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+banner motd ^CCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 30
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+!
+end

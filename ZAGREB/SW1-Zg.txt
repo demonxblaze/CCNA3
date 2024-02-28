@@ -1,0 +1,403 @@
+hostname SW1-Zg
+!
+!
+!
+enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
+!
+username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
+!
+vtp mode transparent
+ip arp inspection vlan 10,20,30
+!
+!
+ip dhcp snooping vlan 10,20,30,40
+ip dhcp snooping information option allow-untrusted
+no ip dhcp snooping verify no-relay-agent-address
+ip dhcp snooping
+no ip domain-lookup
+ip domain-name isepacademy.ccna.itn.com
+ip host MLS1-Zg 172.20.7.3
+ip host MLS2-Zg 172.20.7.4
+ip host RT1-Pl 172.20.11.105
+ip host RT1-St 172.20.13.233
+ip host RT1-Zg 172.20.7.105
+ip host SW1-Pl 172.20.11.106
+ip host SW1-St 172.20.13.234
+ip host SW1-Zg 172.20.7.1
+ip host SW2-Zg 172.20.7.2
+!
+login block-for 300 attempts 3 within 120
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast default
+spanning-tree portfast bpduguard default
+!
+!
+!
+!
+vlan 5
+ name APs
+!
+vlan 6
+ name MANAGEMENT
+!
+vlan 7
+ name NATIVE
+!
+vlan 10
+ name SERVERS
+!
+vlan 20
+ name ADMINISTRATION
+!
+vlan 30
+ name STAFF
+!
+vlan 40
+ name VOIP
+!
+vlan 50
+ name WIRELESS
+!
+vlan 60
+ name GUESTS
+!
+vlan 99
+ name BLACKHOLE
+!
+!
+!
+!
+interface FastEthernet0/1
+ description Access to VLAN 10
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface FastEthernet0/2
+ description Access to VLAN 10
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/3
+ description Access to VLAN 10
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/4
+ description Access to VLAN 10
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/5
+ description Access to VLAN 10
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/6
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/7
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/8
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/9
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/10
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/11
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/12
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/13
+ description Access to VLAN 20 and Voice VLAN 40
+ switchport access vlan 20
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/14
+ description Access to VLAN 30 and Voice VLAN 40
+ switchport access vlan 30
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/15
+ description Access to VLAN 30 and Voice VLAN 40
+ switchport access vlan 30
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/16
+ description Access to VLAN 30 and Voice VLAN 40
+ switchport access vlan 30
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/17
+ description Access to VLAN 30 and Voice VLAN 40
+ switchport access vlan 30
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/18
+ description Access to VLAN 30 and Voice VLAN 40
+ switchport access vlan 30
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/19
+ description Access to VLAN 30 and Voice VLAN 40
+ switchport access vlan 30
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/20
+ description Access to VLAN 30 and Voice VLAN 40
+ switchport access vlan 30
+ switchport mode access
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/21
+ description Unused Interface
+ switchport access vlan 99
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface FastEthernet0/22
+ description Unused Interface
+ switchport access vlan 99
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface FastEthernet0/23
+ description Unused Interface
+ switchport access vlan 99
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface FastEthernet0/24
+ description Unused Interface
+ switchport access vlan 99
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet0/1
+ description Trunking Port
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface GigabitEthernet0/2
+ description Trunking Port
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface Vlan1
+ description Unused Default Vlan
+ no ip address
+ shutdown
+!
+interface Vlan6
+ description Management VLAN
+ ip address 172.20.7.1 255.255.255.224
+!
+ip default-gateway 172.20.7.5
+!
+line con 0
+ login local
+line vty 0 4
+ exec-timeout 60 0
+ !exec-timeout 0 30
+ login local
+ transport input ssh
+line vty 5 15
+ exec-timeout 60 0
+ !exec-timeout 0 30
+ login local
+ transport input ssh
+!
+!
+!
+crypto key generate rsa modulus 1024 exportable
+!
+end
