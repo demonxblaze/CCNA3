@@ -1,5 +1,4 @@
-!
-! Last configuration change at 14:12:38 UTC Wed Feb 28 2024
+
 version 15.1
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -98,21 +97,12 @@ interface GigabitEthernet0/1
  ipv6 address 2001:A:0:222::1/64
 !
 interface GigabitEthernet0/2
- no ip address
+ description Connection to IsepAcademy Internet
+ !ip address dhcp
+ ip address 172.16.200.128
  duplex auto
  speed auto
-!
-interface GigabitEthernet0/2.102
- description Connection to RT1-Pl
- encapsulation dot1Q 102
- ip address 10.0.0.1 255.255.255.252
- ipv6 address FE80::1 link-local
-!
-interface GigabitEthernet0/2.103
- description Connection to RT1-St
- encapsulation dot1Q 103
- ip address 10.0.0.5 255.255.255.252
- ipv6 address FE80::1 link-local
+ ipv6 address FE80::1:1 link-local
 !
 interface Serial0/0/0
  no ip address
@@ -171,44 +161,6 @@ line vty 0 4
 scheduler allocate 20000 1000
 end
 
-RT-Zg#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
-RT-Zg(config)#int g0/2
-RT-Zg(config-if)#des
-RT-Zg(config-if)#description Connection to IsepAcademy Internet
-RT-Zg(config-if)#ping 172.20.4.3
-                  ^
-% Invalid input detected at '^' marker.
-
-RT-Zg(config-if)#do ping 172.20.4.3
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 172.20.4.3, timeout is 2 seconds:
-.....
-Success rate is 0 percent (0/5)
-RT-Zg(config-if)#ssh MLS2-Zg
-                  ^
-% Invalid input detected at '^' marker.
-
-RT-Zg(config-if)#do ssh -l MLS2-Zg
-ssh -l MLS2-Zg
-% Incomplete command.
-
-RT-Zg(config-if)#do ssh -l cisco MLS2-Zg
-Translating "MLS2-Zg"
-
-Translating "MLS2-Zg"
-
-% Unknown command or computer name, or unable to find computer address
-RT-Zg(config-if)#^Z
-RT-Zg#do
-Feb 28 19:33:42.310: %SYS-5-CONFIG_I: Configured from console by cisco on console
-% Incomplete command.
-
-RT-Zg#ssh -l cisco MLS1-Zg
-Translating "MLS1-Zg"
-% Destination unreachable; gateway or host down
-
-RT-Zg#
 
 
 

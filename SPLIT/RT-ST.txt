@@ -169,19 +169,11 @@ interface GigabitEthernet0/1.60
  ip address 172.20.12.193 255.255.255.224
 !
 interface GigabitEthernet0/2
- no ip address
+ !ip address dhcp
+ ip address 172.16.200.130
  duplex auto
  speed auto
-!
-interface GigabitEthernet0/2.103
- description Connection to RT1-Zg
- encapsulation dot1Q 103
- ip address 10.0.0.6 255.255.255.252
-!
-interface GigabitEthernet0/2.203
- description Connection to RT1-Pl
- encapsulation dot1Q 203
- ip address 10.0.0.10 255.255.255.252
+ ipv6 address FE80::1:1 link-local
 !
 interface Serial0/0/0
  no ip address
@@ -198,11 +190,7 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
-ip route 172.20.0.0 255.255.248.0 GigabitEthernet0/2.103
-ip route 172.20.8.0 255.255.252.0 GigabitEthernet0/2.203
-!
-ipv6 route 2001:A::/61 GigabitEthernet0/2.103
-ipv6 route 2001:B::/61 GigabitEthernet0/2.203
+
 !
 !
 !
