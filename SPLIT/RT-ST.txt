@@ -1,3 +1,6 @@
+!
+! Last configuration change at 16:14:03 UTC Wed Mar 6 2024
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -95,13 +98,13 @@ voice-card 0
 !
 !
 !
-license udi pid CISCO2911/K9 sn FCZ160220UC
+license udi pid CISCO2911/K9 sn FCZ160270GH
 license accept end user agreement
 license boot module c2900 technology-package securityk9
 license boot module c2900 technology-package uck9
 !
 !
-username cisco privilege 15 secret 5 $1$BTkM$BC1LmlHSxItkgXA6hY5l1/
+vtp mode transparent
 !
 redundancy
 !
@@ -111,9 +114,22 @@ redundancy
 !
 !
 !
+crypto isakmp policy 100
+ encr aes
+ authentication pre-share
+ group 5
+crypto isakmp key z4gr3b$pl1t address 172.16.200.128
+!
+!
+crypto ipsec transform-set TSET esp-3des esp-sha-hmac
+ mode tunnel
 !
 !
 !
+crypto map CROATIA 30 ipsec-isakmp
+ ! Incomplete
+ set peer 172.16.200.128
+ set transform-set TSET
 !
 !
 !
@@ -131,13 +147,18 @@ interface Loopback2
  description Communication LAN
  ip address 172.20.12.129 255.255.255.192
 !
+interface Tunnel30
+ description tunnel split-zagreb
+ ip address 10.0.0.6 255.255.255.252
+ tunnel source GigabitEthernet0/2
+ tunnel destination 172.16.200.128
+!
 interface Embedded-Service-Engine0/0
  no ip address
  shutdown
 !
 interface GigabitEthernet0/0
  no ip address
- shutdown
  duplex auto
  speed auto
 !
@@ -169,11 +190,11 @@ interface GigabitEthernet0/1.60
  ip address 172.20.12.193 255.255.255.224
 !
 interface GigabitEthernet0/2
- !ip address dhcp
- ip address 172.16.200.130
+ ip address dhcp
  duplex auto
  speed auto
  ipv6 address FE80::1:1 link-local
+ crypto map CROATIA
 !
 interface Serial0/0/0
  no ip address
@@ -185,12 +206,19 @@ interface Serial0/0/1
  shutdown
  clock rate 2000000
 !
+router ospf 100
+ passive-interface GigabitEthernet0/0
+ network 10.0.0.6 0.0.0.0 area 0
+ network 10.0.0.10 0.0.0.0 area 0
+ network 172.20.12.0 0.0.1.255 area 0
+ default-information originate
+!
 ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
 !
-
+!
 !
 !
 !
@@ -218,7 +246,8 @@ gatekeeper
  shutdown
 !
 !
-banner motd ^CCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
+ vstack
+banner motd ^CCCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
 line aux 0
@@ -234,5 +263,6 @@ line vty 0 4
  transport input ssh
 !
 scheduler allocate 20000 1000
+ntp server pnpntpserver.isepacademy.isep.ipp.pt
 !
 end

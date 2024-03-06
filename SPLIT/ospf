@@ -1,0 +1,9 @@
+router ospf 100
+passive-interface GigabitEthernet0/0
+ network 10.0.0.10 0.0.0.0 area 0
+ network 10.0.0.6 0.0.0.0 area 0
+ network 172.20.12.0 0.0.1.255 area 0
+ default-information originate
+!
+ip route 0.0.0.0 0.0.0.0 172.16.200.254
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/2
