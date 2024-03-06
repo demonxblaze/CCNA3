@@ -1,3 +1,193 @@
+!
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname RT-Zg
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+memory-size iomem 5
+!
+no ipv6 cef
+ip source-route
+ip cef
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name isepacademy.ccna.itn.com
+ip host AP1-Pl 172.20.11.98
+ip host AP1-St 172.20.12.226
+ip host AP1-Zg 172.20.7.5
+ip host DHCP-SRV 172.20.7.50
+ip host MLS1-Zg 172.20.7.67
+ip host SW1-Pl 172.20.11.106
+ip host SW1-St 172.20.12.234
+ip host SW1-Zg 172.20.7.65
+ip host SW2-Zg 172.20.7.66
+ip host VirtualMLS-Zg 172.20.7.95
+ip host WLC1-Zg 172.20.7.94
+login block-for 300 attempts 3 within 120
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FCZ160220UG
+license accept end user agreement
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package uck9
+!
+!
+vtp mode transparent
+username cisco privilege 15 password 7 00071F071748080A0E325F
+!
+redundancy
+!
+!
+!
+!
+ip ssh time-out 30
+ip ssh version 2
+!
+!
+!
+!
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ description Connection to MLS1-Zg
+ ip address 172.20.7.105 255.255.255.252
+ duplex auto
+ speed auto
+ ipv6 address 2001:A:0:111::1/64
+!
+interface GigabitEthernet0/1
+ description Connection to MLS2-Zg
+ ip address 172.20.7.109 255.255.255.252
+ duplex auto
+ speed auto
+ ipv6 address 2001:A:0:222::1/64
+!
+interface GigabitEthernet0/2
+ description Connection to IsepAcademy Internet
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2.102
+ description Connection to RT1-Pl
+ encapsulation dot1Q 102
+ ip address 10.0.0.1 255.255.255.252
+ ipv6 address FE80::1 link-local
+!
+interface GigabitEthernet0/2.103
+ description Connection to RT1-St
+ encapsulation dot1Q 103
+ ip address 10.0.0.5 255.255.255.252
+ ipv6 address FE80::1 link-local
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+!
+line con 0
+ login local
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport input all
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 30
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end
+
+RT-Zg#
+RT-Zg#
+DHCP-SERVER>
+DHCP-SERVER>
+DHCP-SERVER>
+DHCP-SERVER>
+DHCP-SERVER>en
+Password:
+DHCP-SERVER#
+DHCP-SERVER#
+DHCP-SERVER#sh run
+Building configuration...
+
+
+Current configuration : 3975 bytes
+!
+! Last configuration change at 20:20:08 UTC Wed Feb 28 2024
 version 15.1
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -12,6 +202,7 @@ boot-end-marker
 enable secret 5 $1$/HGX$UaDeBGUhfXFcqXG0fnjLI1
 !
 no aaa new-model
+!
 memory-size iomem 5
 !
 dot11 syslog
@@ -19,6 +210,7 @@ ip source-route
 !
 !
 ip cef
+!
 ip dhcp excluded-address 172.20.7.105
 ip dhcp excluded-address 172.20.7.109
 ip dhcp excluded-address 172.20.7.65
@@ -55,30 +247,29 @@ ip dhcp excluded-address 172.20.7.5
 ip dhcp excluded-address 172.20.7.50
 !
 ip dhcp pool ADMINISTRATION
-   network 172.20.4.0 255.255.255.0
-   default-router 172.20.4.250
-   domain-name isepacademy.ccna.itn.com
+ network 172.20.4.0 255.255.255.0
+ default-router 172.20.4.250
+ domain-name isepacademy.ccna.itn.com
 !
 ip dhcp pool STAFF
-   network 172.20.5.0 255.255.255.0
-   default-router 172.20.5.250
-   domain-name isepacademy.ccna.itn.com
+ network 172.20.5.0 255.255.255.0
+ default-router 172.20.5.250
+ domain-name isepacademy.ccna.itn.com
 !
 ip dhcp pool VOIP
-   network 172.20.0.0 255.255.254.0
-   default-router 172.20.1.250
-   domain-name isepacademy.ccna.itn.com
+ network 172.20.0.0 255.255.254.0
+ default-router 172.20.1.250
+ domain-name isepacademy.ccna.itn.com
 !
 ip dhcp pool WIRELESS-ZG
-   network 172.20.2.0 255.255.254.0
-   default-router 172.20.3.250
-   domain-name isepacademy.ccna.itn.com
+ network 172.20.2.0 255.255.254.0
+ default-router 172.20.3.250
+ domain-name isepacademy.ccna.itn.com
 !
 ip dhcp pool GUESTS-ZG
-   network 172.20.6.0 255.255.255.0
-   default-router 172.20.6.250
-   domain-name isepacademy.ccna.itn.com
-!
+ network 172.20.6.0 255.255.255.0
+ default-router 172.20.6.250
+ domain-name isepacademy.ccna.itn.com
 !
 !
 no ip domain lookup
@@ -106,6 +297,7 @@ ipv6 dhcp pool GUESTS-ZG
  address prefix 2001:A:0:60::/64
  domain-name isepacademy.ccna.itn.com
 !
+!
 multilink bundle-name authenticated
 !
 !
@@ -125,12 +317,17 @@ crypto pki token default removal timeout 0
 !
 !
 !
-license udi pid CISCO2851 sn FCZ123273WU
+license udi pid CISCO2851 sn FCZ12097171
 username cisco privilege 15 password 7 00071F071748080A0E325F
+!
+redundancy
 !
 !
 ip ssh time-out 30
 ip ssh version 2
+!
+!
+!
 !
 !
 !
@@ -158,10 +355,15 @@ interface Serial0/0/1
  shutdown
  clock rate 2000000
 !
-interface Integrated-Service-Engine1/0
+interface Serial0/2/0
  no ip address
  shutdown
- no keepalive
+ clock rate 125000
+!
+interface Serial0/2/1
+ no ip address
+ shutdown
+ clock rate 125000
 !
 ip forward-protocol nd
 no ip http server
@@ -171,7 +373,9 @@ no ip http secure-server
 ip route 0.0.0.0 0.0.0.0 172.20.7.60
 !
 !
-logging esm config
+!
+!
+!
 !
 !
 !
@@ -186,14 +390,9 @@ mgcp profile default
 !
 !
 !
+!
 line con 0
 line aux 0
-line 66
- no activation-character
- no exec
- transport preferred none
- transport input all
- transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
 line vty 0 4
  exec-timeout 0 30
  login local
