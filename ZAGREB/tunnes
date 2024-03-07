@@ -20,11 +20,11 @@ crypto map CROATIA 30 ipsec-isakmp
  set transform-set TSET
  !match address crypto-acl-zagreb
 !
-interface Tunnel10
- description tunnel zagreb-pula
- ip address 10.0.0.1
- tunnel source GigabitEthernet0/2
- tunnel destination
+!interface Tunnel10
+ !description tunnel zagreb-pula
+ !ip address 10.0.0.1
+ !tunnel source GigabitEthernet0/2
+ !tunnel destination
 !
 interface Tunnel30
  description tunnel zagreb-split
