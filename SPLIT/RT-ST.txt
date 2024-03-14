@@ -1,5 +1,5 @@
 !
-! Last configuration change at 18:48:50 UTC Thu Mar 7 2024
+! Last configuration change at 18:18:15 UTC Thu Mar 14 2024
 !
 version 15.4
 service timestamps debug datetime msec
@@ -42,16 +42,19 @@ ip dhcp pool STAFF
  network 172.20.13.0 255.255.255.128
  default-router 172.20.13.1
  domain-name isepacademy.ccna.itn.com
+ dns-server 193.136.60.10 193.136.60.2
 !
 ip dhcp pool WIRELESS
  network 172.20.13.128 255.255.255.128
  default-router 172.20.13.129
  domain-name isepacademy.ccna.itn.com
+ dns-server 193.136.60.10 193.136.60.2
 !
 ip dhcp pool GUESTS
  network 172.20.12.192 255.255.255.224
  default-router 172.20.12.193
  domain-name isepacademy.ccna.itn.com
+ dns-server 193.136.60.10 193.136.60.2
 !
 !
 !
@@ -267,7 +270,7 @@ gatekeeper
 !
 !
  vstack
-banner motd ^CCCCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
+banner motd ^CCSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
 line aux 0
@@ -285,4 +288,3 @@ line vty 0 4
 scheduler allocate 20000 1000
 !
 end
-
