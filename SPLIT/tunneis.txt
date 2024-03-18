@@ -2,8 +2,8 @@ crypto isakmp policy 100
  encr aes
  authentication pre-share
  group 5
-crypto isakmp key Pvl4$pl1t address 172.16.200.129
-crypto isakmp key z4gr3b$pl1t address 172.16.200.128
+crypto isakmp key Pvl4$pl1t address 172.16.201.77
+crypto isakmp key z4gr3b$pl1t address 172.16.201.80
 !
 !
 crypto ipsec transform-set TSET esp-3des esp-sha-hmac
@@ -12,25 +12,25 @@ crypto ipsec transform-set TSET esp-3des esp-sha-hmac
 !
 !
 crypto map CROATIA 20 ipsec-isakmp
- set peer 172.16.200.129
+ set peer 172.16.201.77
  set transform-set TSET
  !match address crypto-acl-pula
 crypto map CROATIA 30 ipsec-isakmp
- set peer 172.16.200.128
+ set peer 172.16.201.80
  set transform-set TSET
  !match address crypto-acl-zagreb
 !
 !
 interface Tunnel20
  description tunnel split-pula
- ip address 10.0.0.10
+ ip address 10.0.0.10 255.255.255.252
  tunnel source GigabitEthernet0/2
- tunnel destination 172.16.200.129
+ tunnel destination 172.16.201.78
 interface Tunnel30
  description tunnel split-zagreb
  ip address 10.0.0.6 255.255.255.252
  tunnel source GigabitEthernet0/2
- tunnel destination 172.16.200.128
+ tunnel destination 172.16.201.80
 !
 interface g0/2
  crypto map CROATIA
