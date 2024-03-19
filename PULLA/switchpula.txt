@@ -7,79 +7,94 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
 !
-hostname SW-Pl
+hostname SW1-Pl
 !
-boot-start-marker
-boot-end-marker
 !
 enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
-username cisco privilege 15 password 7 094F42080A16141E0A1F17
-no aaa new-model
-system mtu routing 1500
+username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
+!
+vtp mode transparent
 !
 !
+ip dhcp snooping vlan 30
+ip dhcp snooping information option allow-untrusted
 no ip domain-lookup
 ip domain-name isepacademy.ccna.itn.com
+ip host SW2-Zg 172.20.7.2
+ip host SW1-Zg 172.20.7.1
+ip host SW1-St 172.20.13.234
+ip host SW1-Pl 172.20.11.106
+ip host RT1-Zg 172.20.7.105
+ip host RT1-St 172.20.13.233
+ip host RT1-Pl 172.20.11.105
+ip host MLS2-Zg 172.20.7.110
+ip host MLS1-Zg 172.20.7.106
 login block-for 300 attempts 3 within 120
 !
 !
-crypto pki trustpoint TP-self-signed-817981696
+crypto pki trustpoint TP-self-signed-4226628864
  enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-817981696
+ subject-name cn=IOS-Self-Signed-Certificate-4226628864
  revocation-check none
- rsakeypair TP-self-signed-817981696
-!
-!
-crypto pki certificate chain TP-self-signed-817981696
- certificate self-signed 01
-  30820229 30820192 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
-  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274
-  69666963 6174652D 38313739 38313639 36301E17 0D393330 33303130 33323135
-  315A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F
-  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3831 37393831
-  36393630 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100
-  9E17DAB6 1AF03267 E0393FD1 28BDE52F CB17B70C D8E9A7A9 68A6EF98 DC1F3827
-  8C71C20E 73A97A23 746887DC 19008D3F AEFD9E58 A411695F E58D98D1 798837B6
-  16684B3F 08F723F0 C3417665 A27590FA 0B122D50 CB5F8921 F66B3206 30047093
-  EFCDA0F2 9034B92C 4A404004 8CA9D704 99274EB7 0B22E448 2C784295 AABDC21D
-  02030100 01A35330 51300F06 03551D13 0101FF04 05300301 01FF301F 0603551D
-  23041830 168014AC 57FEA7FC 74685898 F042AEA4 E14ACA53 86191F30 1D060355
-  1D0E0416 0414AC57 FEA7FC74 685898F0 42AEA4E1 4ACA5386 191F300D 06092A86
-  4886F70D 01010505 00038181 00299CBD 42CF75F8 A865E287 E747BBA5 96C45806
-  F01AF1E9 37794C52 84471B61 42A4DCAF 832C802C 48D3E559 3B685943 2D464ACB
-  EA04D463 A89CA298 06380852 255294CE 9B586A85 02B3CC9B F54955A6 647800DF
-  FE8A4E6C 870CA4B8 8EA8D158 AEE7A358 5A585987 1D4BE375 17C75C8B 5680DFB0
-  2A5C862F 2A0C3AF1 6C5AF519 66
-        quit
-!
-!
+ rsakeypair TP-self-signed-4226628864
 !
 !
 !
 !
 spanning-tree mode rapid-pvst
+spanning-tree portfast default
 spanning-tree portfast bpduguard default
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
 !
-ip ssh time-out 30
-ip ssh version 2
+vlan 5
+ name APs
+!
+vlan 6
+ name MANAGEMENT
+!
+vlan 7
+ name NATIVE
+!
+vlan 10
+ name SERVERS
+!
+vlan 20
+ name ADMINISTRATION
+!
+vlan 30
+ name STAFF
+!
+vlan 40
+ name VOIP
+!
+vlan 50
+ name WIRELESS
+!
+vlan 60
+ name GUESTS
+!
+vlan 99
+ name BLACKHOLE
+!
 !
 !
 !
 !
 !
 interface FastEthernet0/1
+ description Trunking Port
  switchport trunk native vlan 7
- switchport trunk allowed vlan 5,6,30,50,60
+ switchport trunk allowed vlan 5,6,30,40,50,60
  switchport mode trunk
  switchport nonegotiate
  ip arp inspection trust
  ip dhcp snooping trust
 !
 interface FastEthernet0/2
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -87,10 +102,10 @@ interface FastEthernet0/2
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/3
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -98,10 +113,10 @@ interface FastEthernet0/3
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/4
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -109,10 +124,10 @@ interface FastEthernet0/4
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/5
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -120,10 +135,10 @@ interface FastEthernet0/5
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/6
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -131,10 +146,10 @@ interface FastEthernet0/6
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/7
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -142,10 +157,10 @@ interface FastEthernet0/7
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/8
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -153,21 +168,12 @@ interface FastEthernet0/8
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/9
- switchport access vlan 30
- switchport mode access
- switchport nonegotiate
- switchport port-security maximum 5
- switchport port-security aging time 5
- switchport port-security aging type inactivity
- switchport port-security
- spanning-tree bpduguard enable
- ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/10
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -175,10 +181,10 @@ interface FastEthernet0/10
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/11
+ description Accessiption Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -186,10 +192,10 @@ interface FastEthernet0/11
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/12
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -197,10 +203,10 @@ interface FastEthernet0/12
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/13
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -208,10 +214,10 @@ interface FastEthernet0/13
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/14
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
@@ -219,122 +225,117 @@ interface FastEthernet0/14
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
- spanning-tree bpduguard enable
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/15
+ description Access to VLAN 30
  switchport access vlan 30
  switchport mode access
  switchport nonegotiate
+ switchport voice vlan 40
  switchport port-security maximum 5
  switchport port-security aging time 5
  switchport port-security aging type inactivity
  switchport port-security
  shutdown
- spanning-tree bpduguard enable
+ spanning-tree portfast
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/16
+ description VOIP VLAN 40
  switchport access vlan 99
  switchport mode access
- shutdown
+ switchport nonegotiate
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/17
+ description Unused Port
  switchport access vlan 99
  switchport mode access
+ switchport nonegotiate
  shutdown
 !
 interface FastEthernet0/18
+ description Unused Port
  switchport access vlan 99
  switchport mode access
+ switchport nonegotiate
  shutdown
 !
 interface FastEthernet0/19
+ description Unused Port
  switchport access vlan 99
  switchport mode access
+ switchport nonegotiate
  shutdown
 !
 interface FastEthernet0/20
+ description Unused Port
  switchport access vlan 99
  switchport mode access
+ switchport nonegotiate
  shutdown
 !
 interface FastEthernet0/21
+ description unused Port
  switchport access vlan 99
- switchport trunk native vlan 5
- switchport trunk allowed vlan 5,50,60
- switchport mode trunk
+ switchport mode access
  switchport nonegotiate
  shutdown
 !
 interface FastEthernet0/22
- switchport trunk native vlan 5
- switchport trunk allowed vlan 5,50,60
- switchport mode trunk
+ description Unused Port
+ switchport access vlan 99
+ switchport mode access     
  switchport nonegotiate
- ip arp inspection trust
- ip dhcp snooping trust
+ shutdown
 !
 interface FastEthernet0/23
+ description Unused Port
  switchport access vlan 99
  switchport mode access
  switchport nonegotiate
  shutdown
 !
 interface FastEthernet0/24
+ description Unused Port
  switchport access vlan 99
  switchport mode access
  switchport nonegotiate
  shutdown
 !
 interface GigabitEthernet0/1
+ description Unused Port
  switchport access vlan 99
  switchport mode access
  switchport nonegotiate
+ shutdown
 !
 interface GigabitEthernet0/2
+ description Unused Port
  switchport access vlan 99
  switchport mode access
  switchport nonegotiate
+ shutdown
 !
 interface Vlan1
  no ip address
  shutdown
 !
-interface Vlan5
- no ip address
-!
 interface Vlan6
+ description Management VLAN
  ip address 172.20.11.106 255.255.255.248
 !
-interface Vlan7
- no ip address
-!
-interface Vlan10
- no ip address
-!
-interface Vlan20
- no ip address
-!
-interface Vlan30
- no ip address
- ip helper-address 172.20.10.129
-!
-interface Vlan40
- no ip address
-!
-interface Vlan50
- no ip address
-!
-interface Vlan60
- no ip address
-!
-interface Vlan99
- no ip address
-!
 ip default-gateway 172.20.11.105
-ip http server
-ip http secure-server
+!
+!
+!
 !
 !
 no vstack
@@ -350,5 +351,7 @@ line vty 5 15
  exec-timeout 0 30
  login local
  transport input ssh
+!
+crypto key generate rsa modulus 1024 exportable
 !
 end
