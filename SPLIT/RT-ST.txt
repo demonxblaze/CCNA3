@@ -156,7 +156,7 @@ interface Tunnel20
  description tunnel split-pula
  ip address 10.0.0.10 255.255.255.252
  tunnel source GigabitEthernet0/2
- tunnel destination 172.16.201.78
+ tunnel destination 172.16.201.77
 !
 interface Tunnel30
  description tunnel split-zagreb
@@ -177,7 +177,9 @@ interface GigabitEthernet0/0
 interface GigabitEthernet0/1
  no ip address
  duplex auto
+ no shutdown
  speed auto
+ no shutdown
 !
 interface GigabitEthernet0/1.5
  description Access Point VLAN
@@ -202,10 +204,7 @@ interface GigabitEthernet0/1.30
  ip address 172.20.12.1 255.255.255.128
  ip nat inside
  ip virtual-reassembly in
- shutdown
  ipv6 address FE80::3:1 link-local
- ipv6 address 2001:C::1/64
- ipv6 address 2001:C:0:1::1/64
 !
 interface GigabitEthernet0/1.40
  description VOICE VLAN
@@ -233,10 +232,10 @@ interface GigabitEthernet0/1.60
  ipv6 address 2001:C:0:5::1/64
 !
 interface GigabitEthernet0/2
- ip address dhcp
+ ip address 172.16.201.79
  ip nat outside
  ip virtual-reassembly in
- shutdown
+ no shutdown
  duplex auto
  speed auto
  ipv6 address FE80::1:1 link-local
@@ -252,10 +251,12 @@ interface Serial0/0/1
  shutdown
  clock rate 2000000
 !
+router id 3.3.3.3
+
 router ospf 100
  passive-interface GigabitEthernet0/0
- network 10.0.0.6 0.0.0.0 area 0
- network 10.0.0.10 0.0.0.0 area 0
+ network 10.0.0.4 0.0.0.3 area 0
+ network 10.0.0.8 0.0.0.3 area 0
  network 172.20.12.0 0.0.1.255 area 0
  default-information originate
 !

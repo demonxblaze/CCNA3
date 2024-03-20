@@ -1,10 +1,20 @@
 !
-! Last configuration change at 18:18:40 UTC Mon Mar 18 2024
+! Last configuration change at 18:22:24 UTC Sun Mar 10 2024 by cisco
 !
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
 service password-encryption
 !
 hostname RT1-Pl
 !
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+memory-size iomem 5
 !
 !
 !
@@ -48,6 +58,8 @@ ip dhcp pool VOIP
  default-router 172.20.10.1
  domain-name isepacademy.ccna.itn.com
  dns-server 193.136.60.10 193.136.60.2
+ option 150 ip 172.20.10.1
+ lease 40
 !
 !
 !
@@ -62,6 +74,10 @@ ip host SW1-Pl 172.20.11.106
 ip host SW1-St 172.20.13.234
 ip host SW1-Zg 172.20.7.1
 ip host SW2-Zg 172.20.7.2
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
 !
 !
 !
@@ -80,7 +96,7 @@ voice-card 0
 !
 !
 !
-license udi pid CISCO2911/K9 sn FCZ160270GH
+license udi pid CISCO2911/K9 sn FCZ160220UC
 license accept end user agreement
 license boot module c2900 technology-package securityk9
 license boot module c2900 technology-package uck9
@@ -95,6 +111,7 @@ redundancy
 !
 !
 !
+ip ssh version 2
 !
 !
 crypto isakmp policy 100
@@ -123,7 +140,7 @@ crypto map CROATIA 20 ipsec-isakmp
 !
 !
 !
-nterface Loopback0
+interface Loopback0
  description Loopback Interface
  ip address 172.20.8.1 255.255.255.0
  ipv6 address FE80::2:1 link-local
@@ -137,14 +154,17 @@ interface Tunnel10
  description Tunnel PULA-ZAGREB
  ip address 10.0.0.2 255.255.255.252
  tunnel source GigabitEthernet0/2
- tunnel destination 172.16.201.55
+ tunnel destination 172.16.201.80
 !
 interface Tunnel20
  description Tunnel PULA-SPLIT
  ip address 10.0.0.9 255.255.255.252
  tunnel source GigabitEthernet0/2
- tunnel destination 172.16.201.56
+ tunnel destination 172.16.201.79
 !
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
 !
 interface GigabitEthernet0/0
  no ip address
@@ -156,74 +176,75 @@ interface GigabitEthernet0/0
 interface GigabitEthernet0/1
  no ip address
  ip nat inside
+ ip virtual-reassembly in
  duplex auto
  speed auto
  ipv6 address FE80::2:1 link-local
- no shutdown
 !
 interface GigabitEthernet0/1.5
  description Access Point VLAN
  encapsulation dot1Q 5
  ip address 172.20.11.97 255.255.255.248
  ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
  ipv6 address 2001:B:0:6::1/64
- no shutdown
 !
 interface GigabitEthernet0/1.6
  description Management VLAN
  encapsulation dot1Q 6
  ip address 172.20.11.105 255.255.255.248
  ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
  ipv6 address 2001:B:0:7::1/64
- no shutdown
 !
 interface GigabitEthernet0/1.30
  description Staff VLAN
  encapsulation dot1Q 30
  ip address 172.20.10.129 255.255.255.128
  ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
  ipv6 address 2001:B:0:3::1/64
- no shutdown
 !
 interface GigabitEthernet0/1.40
  description VOIP VLAN
  encapsulation dot1Q 40
  ip address 172.20.10.1 255.255.255.128
  ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
  crypto map CROATIA
- no shutdown
 !
 interface GigabitEthernet0/1.50
  description Wireless VLAN
  encapsulation dot1Q 50
  ip address 172.20.9.1 255.255.255.0
  ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
  ipv6 address 2001:B:0:1::1/64
- no shutdown
 !
 interface GigabitEthernet0/1.60
  description Guest VLAN
  encapsulation dot1Q 60
  ip address 172.20.11.1 255.255.255.192
  ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
  ipv6 address 2001:B:0:4::1/64
- no shutdown
+ crypto map CROATIA
 !
 interface GigabitEthernet0/2
  description Internet Connection
  ip address 172.16.201.77 255.255.255.0
  ip nat outside
+ ip virtual-reassembly in
  duplex auto
  speed auto
  ipv6 address FE80::2:1 link-local
  crypto map CROATIA
- no shutdown
 !
 interface Serial0/0/0
  no ip address
@@ -237,17 +258,11 @@ interface Serial0/0/1
 !
 router ospf 100
  passive-interface GigabitEthernet0/1
- network 10.0.0.2 0.0.0.0 area 0
- network 10.0.0.9 0.0.0.0 area 0
- network 172.20.9.1 0.0.0.0 area 0
- network 172.20.10.1 0.0.0.0 area 0
- network 172.20.10.129 0.0.0.0 area 0
- network 172.20.11.1 0.0.0.0 area 0
- network 172.20.11.97 0.0.0.0 area 0
- network 172.20.11.105 0.0.0.0 area 0
+ network 10.0.0.0 0.0.0.3 area 0
+ network 10.0.0.8 0.0.0.3 area 0
+ network 172.20.8.0 0.0.3.255 area 0
  default-information originate
 !
-ip default-gateway 172.16.201.254
 ip forward-protocol nd
 !
 no ip http server
@@ -285,8 +300,19 @@ gatekeeper
  shutdown
 !
 !
- 
-banner motd ^CCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
+telephony-service
+ max-ephones 58
+ max-dn 128
+ ip source-address 172.20.10.1 port 2000
+ system message CONA-PAI
+ cnf-file location flash:
+ load 7912 CP7912080004SCCP080108A.sbin
+ max-conferences 8 gain -6
+ transfer-system full-consult
+ create cnf-files version-stamp Jan 01 2002 00:00:00
+!
+!
+banner motd ^CCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
 line aux 0
@@ -301,7 +327,7 @@ line vty 0 4
  login local
  transport input ssh
 !
-!
-crypto key generate rsa modulus 1024 exportable
+scheduler allocate 20000 1000
+ntp server pnpntpserver.isepacademy.isep.ipp.pt
 !
 end
