@@ -1,7 +1,7 @@
 !
-! Last configuration change at 18:59:06 UTC Mon Mar 18 2024
+! Last configuration change at 16:13:38 UTC Mon Mar 11 2024
 !
-version 15.1
+version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
@@ -14,13 +14,16 @@ boot-end-marker
 !
 !
 no aaa new-model
-!
 memory-size iomem 5
 !
-ipv6 unicast-routing
-ipv6 cef
-ip source-route
-ip cef
+!
+!
+!
+!
+!
+!
+!
+!
 !
 !
 ip dhcp excluded-address 172.20.12.225
@@ -55,10 +58,12 @@ ip dhcp pool WIRELESS
 ip dhcp pool GUESTS
  network 172.20.12.192 255.255.255.224
  default-router 172.20.12.193
+ dns-server 193.136.60.10
  domain-name isepacademy.ccna.itn.com
 !
 ip dhcp pool VOICE
  network 172.20.13.64 255.255.255.192
+ dns-server 193.136.60.10
  default-router 172.20.13.65
  domain-name isepacademy.ccna.itn.com
 !
@@ -67,6 +72,7 @@ ip dhcp pool GUEST
  default-router 172.20.13.193
  dns-server 193.136.60.10
  domain-name isepacademy.ccna.itn.com
+!
 !
 !
 no ip domain lookup
@@ -82,6 +88,9 @@ ip host SW1-Zg 172.20.7.65
 ip host SW2-Zg 172.20.7.66
 ip host VirtualMLS-Zg 172.20.7.95
 ip host WLC1-Zg 172.20.7.94
+ip cef
+ipv6 unicast-routing
+ipv6 cef
 !
 multilink bundle-name authenticated
 !
@@ -89,7 +98,8 @@ multilink bundle-name authenticated
 !
 !
 !
-crypto pki token default removal timeout 0
+!
+cts logging verbose
 !
 !
 voice-card 0
@@ -100,7 +110,8 @@ voice-card 0
 !
 !
 !
-license udi pid CISCO2911/K9 sn FCZ160220UG
+!
+license udi pid CISCO2911/K9 sn FCZ160220UC
 license accept end user agreement
 license boot module c2900 technology-package securityk9
 license boot module c2900 technology-package uck9
@@ -109,6 +120,7 @@ license boot module c2900 technology-package uck9
 vtp mode transparent
 !
 redundancy
+!
 !
 !
 !
@@ -124,6 +136,9 @@ crypto isakmp key z4gr3b$pl1t address 172.16.201.80
 !
 !
 crypto ipsec transform-set TSET esp-3des esp-sha-hmac
+ mode tunnel
+!
+!
 !
 crypto map CROATIA 20 ipsec-isakmp
  ! Incomplete
@@ -179,7 +194,6 @@ interface GigabitEthernet0/1
  duplex auto
  no shutdown
  speed auto
- no shutdown
 !
 interface GigabitEthernet0/1.5
  description Access Point VLAN
@@ -232,10 +246,9 @@ interface GigabitEthernet0/1.60
  ipv6 address 2001:C:0:5::1/64
 !
 interface GigabitEthernet0/2
- ip address 172.16.201.79
+ ip address 172.16.201.79 255.255.255.0
  ip nat outside
  ip virtual-reassembly in
- no shutdown
  duplex auto
  speed auto
  ipv6 address FE80::1:1 link-local
@@ -251,10 +264,8 @@ interface Serial0/0/1
  shutdown
  clock rate 2000000
 !
-router id 3.3.3.3
-
 router ospf 100
- passive-interface GigabitEthernet0/0
+ passive-interface GigabitEthernet0/1
  network 10.0.0.4 0.0.0.3 area 0
  network 10.0.0.8 0.0.0.3 area 0
  network 172.20.12.0 0.0.1.255 area 0
@@ -269,19 +280,25 @@ ip nat inside source list 1 interface GigabitEthernet0/2 overload
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/2
 ip route 0.0.0.0 0.0.0.0 172.16.201.254
 !
+!
+!
 access-list 1 permit 172.20.12.0 0.0.1.255
-!
-!
-!
-!
-!
 !
 control-plane
 !
+ !
+ !
+ !
+ !
 !
-!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
 !
 mgcp profile default
+!
+!
 !
 !
 !
@@ -291,7 +308,7 @@ gatekeeper
  shutdown
 !
 !
-banner motd ^CCCSECURITY WARNING: Unauthorized access is prohibited!^C
+banner motd ^CCCCSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
 line aux 0
@@ -308,4 +325,6 @@ line vty 0 4
  transport input ssh
 !
 scheduler allocate 20000 1000
+ntp server pnpntpserver.isepacademy.isep.ipp.pt
+!
 end

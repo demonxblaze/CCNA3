@@ -1,5 +1,5 @@
 !
-! Last configuration change at 18:22:24 UTC Sun Mar 10 2024 by cisco
+! Last configuration change at 17:07:01 UTC Mon Mar 11 2024
 !
 version 15.4
 service timestamps debug datetime msec
@@ -96,7 +96,7 @@ voice-card 0
 !
 !
 !
-license udi pid CISCO2911/K9 sn FCZ160220UC
+license udi pid CISCO2911/K9 sn FCZ160270GA
 license accept end user agreement
 license boot module c2900 technology-package securityk9
 license boot module c2900 technology-package uck9
@@ -177,6 +177,7 @@ interface GigabitEthernet0/1
  no ip address
  ip nat inside
  ip virtual-reassembly in
+ no shutdown
  duplex auto
  speed auto
  ipv6 address FE80::2:1 link-local
@@ -309,10 +310,9 @@ telephony-service
  load 7912 CP7912080004SCCP080108A.sbin
  max-conferences 8 gain -6
  transfer-system full-consult
- create cnf-files version-stamp Jan 01 2002 00:00:00
 !
 !
-banner motd ^CCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
+banner motd ^CCCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
 line aux 0
@@ -331,3 +331,4 @@ scheduler allocate 20000 1000
 ntp server pnpntpserver.isepacademy.isep.ipp.pt
 !
 end
+
