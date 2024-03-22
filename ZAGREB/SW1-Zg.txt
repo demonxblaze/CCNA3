@@ -1,3 +1,6 @@
+!
+service password-encryption
+!
 hostname SW1-Zg
 !
 !
@@ -7,7 +10,7 @@ enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
 vtp mode transparent
-ip arp inspection vlan 10,20,30
+no ip arp inspection vlan 10,20,30
 !
 !
 ip dhcp snooping vlan 10,20,30,40
@@ -71,6 +74,8 @@ vlan 60
 !
 vlan 99
  name BLACKHOLE
+!
+!
 !
 !
 !
@@ -383,21 +388,26 @@ interface Vlan6
 !
 ip default-gateway 172.20.7.5
 !
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+vstack
+!
+!
+!
+!
 line con 0
  login local
 line vty 0 4
  exec-timeout 60 0
- !exec-timeout 0 30
  login local
  transport input ssh
 line vty 5 15
  exec-timeout 60 0
- !exec-timeout 0 30
  login local
  transport input ssh
-!
-!
-!
-crypto key generate rsa modulus 1024 exportable
 !
 end
