@@ -128,13 +128,13 @@ crypto ipsec transform-set TSET esp-3des esp-sha-hmac
 !
 !
 crypto map CROATIA 10 ipsec-isakmp
- ! Incomplete
  set peer 172.16.201.80
  set transform-set TSET
+ match address CRYPTO-ACL-ZAGREB
 crypto map CROATIA 20 ipsec-isakmp
- ! Incomplete
  set peer 172.16.201.79
  set transform-set TSET
+ match address CRYPTO-ACL-SPLIT
 !
 !
 !
@@ -275,6 +275,12 @@ ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/2
 !
 !
 !
+ip access-list extended CRYPTO-ACL-ZAGREB
+ permit gre host 172.16.201.77 host 172.16.201.80
+ deny ip any any
+ip access-list extended CRYPTO-ACL-SPLIT
+ permit gre host 172.16.201.77 host 172.16.201.78
+ deny ip any any
 access-list 1 permit 172.20.8.0 0.0.3.255
 !
 control-plane
@@ -305,14 +311,14 @@ telephony-service
  max-ephones 58
  max-dn 128
  ip source-address 172.20.10.1 port 2000
- system message CONA-PAI
+ system message PULA-UP
  cnf-file location flash:
  load 7912 CP7912080004SCCP080108A.sbin
  max-conferences 8 gain -6
  transfer-system full-consult
 !
 !
-banner motd ^CCCCCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
+banner motd $SECURITY WARNING: Unauthorized access is prohibited!$
 !
 line con 0
 line aux 0
@@ -328,7 +334,6 @@ line vty 0 4
  transport input ssh
 !
 scheduler allocate 20000 1000
-ntp server pnpntpserver.isepacademy.isep.ipp.pt
 !
 end
 

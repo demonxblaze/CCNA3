@@ -141,13 +141,13 @@ crypto ipsec transform-set TSET esp-3des esp-sha-hmac
 !
 !
 crypto map CROATIA 20 ipsec-isakmp
- ! Incomplete
  set peer 172.16.201.77
  set transform-set TSET
+ match address CRYPTO-ACL-PULA
 crypto map CROATIA 30 ipsec-isakmp
- ! Incomplete
  set peer 172.16.201.80
  set transform-set TSET
+ match address CRYPTO-ACL-ZAGREB
 !
 !
 !
@@ -282,6 +282,12 @@ ip route 0.0.0.0 0.0.0.0 172.16.201.254
 !
 !
 !
+ip access-list extended CRYPTO-ACL-PULA
+ permit gre host 172.16.201.78 host 172.16.201.77
+ deny ip any any
+ip access-list extended CRYPTO-ACL-ZAGREB
+ permit gre host 172.16.201.78 host 172.16.201.80
+ deny ip any any
 access-list 1 permit 172.20.12.0 0.0.1.255
 !
 control-plane
