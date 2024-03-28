@@ -2,12 +2,22 @@ service password-encryption
 !
 hostname DHCP-SRV
 !
+boot-start-marker
+boot-end-marker
+!
 !
 security passwords min-length 10
-!
-login block-for 300 attempts 3 within 120
-!
 enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
+!
+no aaa new-model
+memory-size iomem 5
+!
+!
+!
+!
+!
+!
+!
 !
 !
 !
@@ -40,6 +50,7 @@ ip dhcp pool VOIP
  default-router 172.20.0.3
  domain-name isepacademy.isep.ipp.pt
  dns-server 193.136.60.10 193.136.60.2
+ option 150 ip 172.20.7.36
 !
 ip dhcp pool WIRELESS
  network 172.20.2.0 255.255.254.0
@@ -54,8 +65,8 @@ ip dhcp pool GUEST
  dns-server 193.136.60.10 193.136.60.2
 !
 !
-ip dhcp snooping information option allow-untrusted
 !
+ip dhcp snooping information option allow-untrusted
 no ip domain lookup
 ip domain name isepacademy.ccna.itn.com
 ip host MLS1-Zg 172.20.7.3
@@ -68,49 +79,184 @@ ip host SW1-St 172.20.13.234
 ip host SW1-Zg 172.20.7.1
 ip host SW2-Zg 172.20.7.2
 ip host DHCP-SRV 172.20.7.36
+ip cef
+login block-for 300 attempts 3 within 120
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+cts logging verbose
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FCZ160270GH
+license accept end user agreement
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package uck9
 !
 !
 username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
 !
 interface GigabitEthernet0/0
  description Unused Interface
  no ip address
  shutdown
-
+ duplex auto
+ speed auto
 !
 interface GigabitEthernet0/1
  description Connection to MLS1-Zg
  ip address 172.20.7.36 255.255.255.224
+ duplex auto
+ speed auto
  ipv6 address 2001:A:0:6::4/64
 !
 interface GigabitEthernet0/2
  description Unused Interface
  no ip address
  shutdown
+ duplex auto
+ speed auto
 !
 interface Serial0/0/0
  no ip address
  shutdown
+ clock rate 2000000
 !
 interface Serial0/0/1
  no ip address
  shutdown
+ clock rate 2000000
 !
 ip default-gateway 172.20.7.35
+ip forward-protocol nd
 !
+no ip http server
+no ip http secure-server
 !
 ip route 0.0.0.0 0.0.0.0 172.20.7.35
 !
 !
 !
-banner motd $SECURITY WARNING: Unauthorized access is prohibited!$
-
 !
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+!
+dial-peer voice 2001 voip
+ description CALL TO PULLA
+ destination-pattern 2001
+ session target ipv4:10.0.0.2
+!
+dial-peer voice 3001 voip
+ description CALL TO SPLIT
+ destination-pattern 3001
+ session target ipv4:10.0.0.6
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+telephony-service
+ max-ephones 58
+ max-dn 128
+ ip source-address 172.20.7.36 port 2000
+ system message VOIP_ZAGREB
+ cnf-file location flash:
+ load 7912 CP7912080004SCCP080108A.sbin
+ max-conferences 8 gain -6
+ transfer-system full-consult
+ create cnf-files version-stamp Jan 01 2002 00:00:00
+!
+!
+ephone-dn  1
+ number 1001
+!
+!
+ephone-dn  2
+ number 1002
+!
+!
+ephone  1
+ device-security-mode none
+ mac-address 0016.9D7A.206B
+ type 7912
+ button  1:1
+!
+!
+!
+ephone  2
+ device-security-mode none
+ mac-address 0015.638A.CBDD
+ type 7912
+ button  1:2
+!
+!
+!
+ vstack
+!
+snmp-server community cisco RO
+!
+banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
  login local
-!
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
 line vty 0 4
  exec-timeout 0 30
  login local
@@ -120,8 +266,7 @@ line vty 5 15
  login local
  transport input ssh
 !
-!
-!
-crypto key generate rsa modulus 1024 exportable
+scheduler allocate 20000 1000
+ntp server 172.16.201.56
 !
 end

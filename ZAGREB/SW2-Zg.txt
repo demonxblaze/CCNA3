@@ -1,3 +1,13 @@
+Building configuration...
+
+Current configuration : 14734 bytes
+!
+! Last configuration change at 07:35:12 UTC Mon Mar 1 1993 by cisco
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
 service password-encryption
 !
 hostname SW2-Zg
@@ -11,11 +21,8 @@ username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 no aaa new-model
 system mtu routing 1500
 vtp mode transparent
-!ip arp inspection vlan 10,20,30
 !
 !
-!ip dhcp snooping vlan 10,20,30,40
-!ip dhcp snooping information option allow-untrusted
 no ip domain-lookup
 ip domain-name isepacademy.ccna.itn.com
 ip host SW2-Zg 172.20.7.2
@@ -30,7 +37,34 @@ ip host MLS1-Zg 172.20.7.3
 login block-for 300 attempts 3 within 120
 !
 !
+crypto pki trustpoint TP-self-signed-2721833344
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2721833344
+ revocation-check none
+ rsakeypair TP-self-signed-2721833344
 !
+!
+crypto pki certificate chain TP-self-signed-2721833344
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 32373231 38333333 3434301E 170D3933 30333031 30303035 
+  35365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 37323138 
+  33333334 3430819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100936C E799E4D4 2CC7F169 08C5E5AB 4222197C 63304844 F9C78D03 6CFFCBEF 
+  05DDA59F BF67B041 117442F5 9C2B2A2B D0ECB41E 419E040D 19E44ACB 8BCBD649 
+  A1F7ED54 0FAC2190 18771B7F 1F883ED4 CE224C0E 5CF0EF1E 09E8EB27 43F19AFC 
+  3481757A BE36B05D 994EB6D7 30D02725 EC1353E7 84889E55 D6A808F0 04E01E2D 
+  C2CB0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 1498C03B DAC3380B 42882C6C FBFF6A29 6706F25E 8F301D06 
+  03551D0E 04160414 98C03BDA C3380B42 882C6CFB FF6A2967 06F25E8F 300D0609 
+  2A864886 F70D0101 05050003 81810087 67B8C7D8 52212D8D 8C067638 63A8945F 
+  31E0056A 0A9C9238 8D30B56A 2331C918 E695A98E 59AB6475 71560A4B D0057F14 
+  19343621 9FA9900F EFD8D9FA AB7ECC54 2EEE476B 0C3FDD57 D5F29C9B 05E26F78 
+  E750EF08 033F05F1 7AEF7178 4764B8CA EC14314D 52239F56 AB23ADA4 EB88102F 
+  EA67B14C D8E82403 B892EAC5 24BA31
+  	quit
 !
 !
 !
@@ -402,21 +436,43 @@ ip default-gateway 172.20.7.5
 ip http server
 ip http secure-server
 !
+ip access-list standard SNMP-ACL
+ permit 172.20.7.40
+ deny   any
+ip access-list standard SSH-ACL
+ permit 172.20.7.108 0.0.0.3
+ permit 172.20.7.104 0.0.0.3
+ permit 10.0.0.0 0.0.0.3
+ permit 10.0.0.4 0.0.0.3
+ permit 10.0.0.8 0.0.0.3
+ permit 172.20.11.104 0.0.0.7
+ permit 172.20.13.232 0.0.0.7
+ permit 172.20.7.0 0.0.0.31
+ permit 172.20.10.128 0.0.0.127
+ permit 172.20.4.0 0.0.0.255
+ permit 172.20.5.0 0.0.0.255
+ permit 172.20.12.0 0.0.1.255
+ deny   any
+!
+logging facility local6
+logging host 172.20.7.40
+snmp-server community cisco RO SNMP-ACL
 !
 vstack
 !
-!
+banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
  login local
 line vty 0 4
+ access-class SSH-ACL in
  exec-timeout 60 0
  login local
  transport input ssh
 line vty 5 15
+ access-class SSH-ACL in
  exec-timeout 60 0
  login local
  transport input ssh
 !
 end
-

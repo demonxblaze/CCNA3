@@ -1,37 +1,74 @@
+Building configuration...
+
+Current configuration : 14445 bytes
 !
+! Last configuration change at 17:25:01 UTC Wed Jan 31 2024 by cisco
+! NVRAM config last updated at 17:24:55 UTC Wed Jan 31 2024 by cisco
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
 service password-encryption
 !
 hostname SW1-Zg
 !
-!
+boot-start-marker
+boot-end-marker
 !
 enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
 username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
-!
+no aaa new-model
+system mtu routing 1500
 vtp mode transparent
-no ip arp inspection vlan 10,20,30
 !
 !
 ip dhcp snooping vlan 10,20,30,40
 ip dhcp snooping information option allow-untrusted
 no ip dhcp snooping verify no-relay-agent-address
-ip dhcp snooping
 no ip domain-lookup
 ip domain-name isepacademy.ccna.itn.com
-ip host MLS1-Zg 172.20.7.3
-ip host MLS2-Zg 172.20.7.4
-ip host RT1-Pl 172.20.11.105
-ip host RT1-St 172.20.13.233
-ip host RT1-Zg 172.20.7.105
-ip host SW1-Pl 172.20.11.106
-ip host SW1-St 172.20.13.234
-ip host SW1-Zg 172.20.7.1
 ip host SW2-Zg 172.20.7.2
-!
+ip host SW1-Zg 172.20.7.1
+ip host SW1-St 172.20.13.234
+ip host SW1-Pl 172.20.11.106
+ip host RT1-Zg 172.20.7.105
+ip host RT1-St 172.20.13.233
+ip host RT1-Pl 172.20.11.105
+ip host MLS2-Zg 172.20.7.4
+ip host MLS1-Zg 172.20.7.3
 login block-for 300 attempts 3 within 120
 !
 !
+crypto pki trustpoint TP-self-signed-879687936
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-879687936
+ revocation-check none
+ rsakeypair TP-self-signed-879687936
+!
+!
+crypto pki certificate chain TP-self-signed-879687936
+ certificate self-signed 01
+  30820229 30820192 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 38373936 38373933 36301E17 0D393330 33303130 30303534 
+  365A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3837 39363837 
+  39333630 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100 
+  CE6BA07F E60147AA 8D03DB64 4676E90A 8A9F19CF DBFACF51 DE91D8EC D797950B 
+  67660785 0C224ED4 3C7F397B 79995211 AF354DBE C82C6B09 877B44BB 4A68B19F 
+  28AFB196 79C4D1C7 0579A91F 6A788F2B AD3E3A85 26C1F1CF 3A53AF00 BD462E05 
+  777F4D75 167D9015 3ACFEF16 DF68AFEB 6DCDE440 878E9D67 E9737548 B918C269 
+  02030100 01A35330 51300F06 03551D13 0101FF04 05300301 01FF301F 0603551D 
+  23041830 168014CC 7115078A 078736B2 D664F065 1B8661DC 03CCF630 1D060355 
+  1D0E0416 0414CC71 15078A07 8736B2D6 64F0651B 8661DC03 CCF6300D 06092A86 
+  4886F70D 01010505 00038181 0021AC14 A6784A88 0944DBC8 B586DD47 D065A6BC 
+  6CCEE3A8 A0C2476E 692B1F8B 22D7B0ED 1E0B51D2 14525A57 6384435B B7394152 
+  8BF8997D 43BE3ADC 5A7D5B47 DB716E9A 175310D1 C4266C1C FD9CCCBF 4CACA595 
+  14D4B9A7 F8C6BB05 5B2DEEF5 999F7376 03261C1B 953D8B4F F0E81D1B F7B1B644 
+  DC46C3BE C6722670 6F42544F 8D
+  	quit
 !
 !
 !
@@ -41,9 +78,9 @@ login block-for 300 attempts 3 within 120
 spanning-tree mode rapid-pvst
 spanning-tree portfast default
 spanning-tree portfast bpduguard default
+spanning-tree extend system-id
 !
-!
-!
+vlan internal allocation policy ascending
 !
 vlan 5
  name APs
@@ -387,27 +424,46 @@ interface Vlan6
  ip address 172.20.7.1 255.255.255.224
 !
 ip default-gateway 172.20.7.5
+ip http server
+ip http secure-server
 !
+ip access-list standard SNMP-ACL
+ permit 172.20.7.40
+ deny   any
+ip access-list standard SSH-ACL
+ permit 172.20.7.108 0.0.0.3
+ permit 172.20.7.104 0.0.0.3
+ permit 10.0.0.0 0.0.0.3
+ permit 10.0.0.4 0.0.0.3
+ permit 10.0.0.8 0.0.0.3
+ permit 172.20.11.104 0.0.0.7
+ permit 172.20.13.232 0.0.0.7
+ permit 172.20.7.0 0.0.0.31
+ permit 172.20.10.128 0.0.0.127
+ permit 172.20.4.0 0.0.0.255
+ permit 172.20.5.0 0.0.0.255
+ permit 172.20.12.0 0.0.1.255
+ deny   any
 !
-!
-no ip http server
-no ip http secure-server
-!
+logging facility local6
+logging host 172.20.7.40
+snmp-server community cisco RO SNMP-ACL
 !
 vstack
-!
-!
-!
+banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
  login local
 line vty 0 4
+ access-class SSH-ACL in
  exec-timeout 60 0
  login local
  transport input ssh
 line vty 5 15
+ access-class SSH-ACL in
  exec-timeout 60 0
  login local
  transport input ssh
 !
+ntp server 172.16.201.55
 end

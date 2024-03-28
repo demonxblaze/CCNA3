@@ -1,5 +1,9 @@
+Building configuration...
+
+Current configuration : 12351 bytes
 !
-! Last configuration change at 00:08:45 UTC Mon Mar 1 1993 by cisco
+! Last configuration change at 16:05:18 UTC Wed Jan 31 2024 by cisco
+! NVRAM config last updated at 16:05:16 UTC Wed Jan 31 2024 by cisco
 !
 version 15.0
 no service pad
@@ -9,11 +13,14 @@ service password-encryption
 !
 hostname SW1-Pl
 !
+boot-start-marker
+boot-end-marker
 !
 enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
 username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
-!
+no aaa new-model
+system mtu routing 1500
 vtp mode transparent
 !
 !
@@ -21,15 +28,15 @@ ip dhcp snooping vlan 30
 ip dhcp snooping information option allow-untrusted
 no ip domain-lookup
 ip domain-name isepacademy.ccna.itn.com
-ip host SW2-Zg 172.20.7.2
-ip host SW1-Zg 172.20.7.1
-ip host SW1-St 172.20.13.234
-ip host SW1-Pl 172.20.11.106
-ip host RT1-Zg 172.20.7.105
-ip host RT1-St 172.20.13.233
-ip host RT1-Pl 172.20.11.105
-ip host MLS2-Zg 172.20.7.110
 ip host MLS1-Zg 172.20.7.106
+ip host MLS2-Zg 172.20.7.110
+ip host RT1-Pl 172.20.11.105
+ip host RT1-St 172.20.13.233
+ip host RT1-Zg 172.20.7.105
+ip host SW1-Pl 172.20.11.106
+ip host SW1-St 172.20.13.234
+ip host SW1-Zg 172.20.7.1
+ip host SW2-Zg 172.20.7.2
 login block-for 300 attempts 3 within 120
 !
 !
@@ -38,6 +45,31 @@ crypto pki trustpoint TP-self-signed-4226628864
  subject-name cn=IOS-Self-Signed-Certificate-4226628864
  revocation-check none
  rsakeypair TP-self-signed-4226628864
+!
+!
+crypto pki certificate chain TP-self-signed-4226628864
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 34323236 36323838 3634301E 170D3933 30333031 30303030 
+  35395A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D34 32323636 
+  32383836 3430819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100B068 E7AFDEBB FFBEB14F 748FD051 4AB77907 C515233E B4B8D215 FB11C09D 
+  D5E1612F 865677EA C3C7B1BD 21E488D5 49430986 6EB548FB 8FA30890 E3AB61A1 
+  3427E37E 12602872 4635471B A1EAF315 D5C4E161 E0CDC63C 00385A36 FC0E6BCD 
+  09ED31DA 25F623A1 3DA09BAC CA262A3D C7B896A8 3D7EEBE7 AF0B7EEE 42B80AFA 
+  B4050203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 14D198D2 78D6297A BBB6187E D2B1FFB9 6F3FEC14 A7301D06 
+  03551D0E 04160414 D198D278 D6297ABB B6187ED2 B1FFB96F 3FEC14A7 300D0609 
+  2A864886 F70D0101 05050003 81810008 ECCB0ADD 6C79B39D 55B66343 33A5A91C 
+  7C97262B 9F2D7A3E 743EBD31 694E5EC0 D1094BB4 CEAFEC02 95DD6283 2285D7EB 
+  E2D1B57D 32AA0465 30F67FB4 5629909D E465C313 708F9A90 07D2FA1B DF701A6E 
+  C619E39F FAC57810 1E931097 748E9CDE E5F661FF 18E72F99 1421AFC7 898E9B9B 
+  1DC64F5B 630BB1F6 BC200FE9 EFA04B
+  	quit
+!
+!
 !
 !
 !
@@ -242,7 +274,7 @@ interface FastEthernet0/15
  ip dhcp snooping limit rate 5
 !
 interface FastEthernet0/16
- description VOIP VLAN 40
+ description Voice VLAN 40
  switchport access vlan 99
  switchport mode access
  switchport nonegotiate
@@ -283,18 +315,23 @@ interface FastEthernet0/20
  shutdown
 !
 interface FastEthernet0/21
- description unused Port
+ description Trunking Port
  switchport access vlan 99
- switchport mode access
+ switchport trunk native vlan 5
+ switchport trunk allowed vlan 5,50,60
+ switchport mode trunk
  switchport nonegotiate
- shutdown
+ ip arp inspection trust
+ ip dhcp snooping trust
 !
 interface FastEthernet0/22
- description Unused Port
- switchport access vlan 99
- switchport mode access     
+ description Trunking Port
+ switchport trunk native vlan 5
+ switchport trunk allowed vlan 5,50,60
+ switchport mode trunk
  switchport nonegotiate
- shutdown
+ ip arp inspection trust
+ ip dhcp snooping trust
 !
 interface FastEthernet0/23
  description Unused Port
@@ -333,25 +370,46 @@ interface Vlan6
  ip address 172.20.11.106 255.255.255.248
 !
 ip default-gateway 172.20.11.105
+ip http server
+ip http secure-server
 !
+ip access-list standard SNMP-ACL
+ permit 172.20.7.40
+ deny   any
+ip access-list standard SSH-ACL
+ permit 172.20.7.108 0.0.0.3
+ permit 172.20.7.104 0.0.0.3
+ permit 10.0.0.0 0.0.0.3
+ permit 10.0.0.4 0.0.0.3
+ permit 10.0.0.8 0.0.0.3
+ permit 172.20.11.104 0.0.0.7
+ permit 172.20.13.232 0.0.0.7
+ permit 172.20.7.0 0.0.0.31
+ permit 172.20.10.128 0.0.0.127
+ permit 172.20.4.0 0.0.0.255
+ permit 172.20.5.0 0.0.0.255
+ permit 172.20.12.0 0.0.1.255
+ deny   any
 !
+logging facility local6
+logging host 172.20.7.40
+snmp-server community cisco RO SNMP-ACL
 !
-!
-!
-no vstack
-banner motd ^CCCCC SECURITY WARNING: Unauthorized access is prohibited!^C
+vstack
+banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
  login local
 line vty 0 4
- exec-timeout 0 30
+ access-class SSH-ACL in
+ exec-timeout 60 0
  login local
  transport input ssh
 line vty 5 15
- exec-timeout 0 30
+ access-class SSH-ACL in
+ exec-timeout 60 0
  login local
  transport input ssh
 !
-crypto key generate rsa modulus 1024 exportable
-!
+ntp server 10.0.0.1
 end

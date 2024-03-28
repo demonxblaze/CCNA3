@@ -1,7 +1,13 @@
+Building configuration...
+
+
+Current configuration : 10754 bytes
 !
-! Last configuration change at 17:07:01 UTC Mon Mar 11 2024
+! Last configuration change at 16:21:33 UTC Wed Jan 31 2024 by cisco
+! NVRAM config last updated at 16:21:04 UTC Wed Jan 31 2024 by cisco
 !
 version 15.4
+service config
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
@@ -12,6 +18,8 @@ boot-start-marker
 boot-end-marker
 !
 !
+security passwords min-length 10
+enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
 no aaa new-model
 memory-size iomem 5
@@ -37,28 +45,28 @@ ip dhcp excluded-address 172.20.11.65
 !
 ip dhcp pool STAFF
  network 172.20.10.128 255.255.255.128
- default-router 172.20.10.129
+ default-router 172.20.10.129 
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 193.136.60.2
+ dns-server 193.136.60.10 193.136.60.2 
 !
 ip dhcp pool WIRELESS
  network 172.20.9.0 255.255.255.0
- default-router 172.20.9.1
+ default-router 172.20.9.1 
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 193.136.60.2
+ dns-server 193.136.60.10 193.136.60.2 
 !
 ip dhcp pool GUEST
  network 172.20.11.0 255.255.255.192
- default-router 172.20.11.1
+ default-router 172.20.11.1 
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 193.136.60.2
+ dns-server 193.136.60.10 193.136.60.2 
 !
 ip dhcp pool VOIP
  network 172.20.10.0 255.255.255.128
- default-router 172.20.10.1
+ default-router 172.20.10.1 
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 193.136.60.2
- option 150 ip 172.20.10.1
+ dns-server 193.136.60.10 193.136.60.2 
+ option 150 ip 172.20.10.1 
  lease 40
 !
 !
@@ -102,8 +110,7 @@ license boot module c2900 technology-package securityk9
 license boot module c2900 technology-package uck9
 !
 !
-vtp mode transparent
-username cisco privilege 15 secret 5 $1$BTkM$BC1LmlHSxItkgXA6hY5l1/
+username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
 redundancy
 !
@@ -111,29 +118,28 @@ redundancy
 !
 !
 !
-ip ssh version 2
-!
+! 
 !
 crypto isakmp policy 100
  encr aes
  authentication pre-share
  group 5
-crypto isakmp key Pvl4$pl1t address 172.16.201.79
-crypto isakmp key z4gr3bPvl4 address 172.16.201.80
+crypto isakmp key z4gr3bPvl4 address 172.16.201.55  
+crypto isakmp key Pvl4$pl1t address 172.16.201.56  
 !
 !
-crypto ipsec transform-set TSET esp-3des esp-sha-hmac
+crypto ipsec transform-set TSET esp-3des esp-sha-hmac 
  mode tunnel
 !
 !
 !
-crypto map CROATIA 10 ipsec-isakmp
+crypto map CROATIA 10 ipsec-isakmp 
  set peer 172.16.201.80
- set transform-set TSET
- match address CRYPTO-ACL-ZAGREB
-crypto map CROATIA 20 ipsec-isakmp
+ set transform-set TSET 
+ match address CRYPTO-ACL-PULA
+crypto map CROATIA 20 ipsec-isakmp 
  set peer 172.16.201.79
- set transform-set TSET
+ set transform-set TSET 
  match address CRYPTO-ACL-SPLIT
 !
 !
@@ -177,7 +183,6 @@ interface GigabitEthernet0/1
  no ip address
  ip nat inside
  ip virtual-reassembly in
- no shutdown
  duplex auto
  speed auto
  ipv6 address FE80::2:1 link-local
@@ -213,6 +218,7 @@ interface GigabitEthernet0/1.40
  description VOIP VLAN
  encapsulation dot1Q 40
  ip address 172.20.10.1 255.255.255.128
+ ip access-group VOIP_NET in
  ip nat inside
  ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
@@ -231,11 +237,11 @@ interface GigabitEthernet0/1.60
  description Guest VLAN
  encapsulation dot1Q 60
  ip address 172.20.11.1 255.255.255.192
+ ip access-group GUESTS_NET in
  ip nat inside
  ip virtual-reassembly in
  ipv6 address FE80::2:1 link-local
  ipv6 address 2001:B:0:4::1/64
- crypto map CROATIA
 !
 interface GigabitEthernet0/2
  description Internet Connection
@@ -259,28 +265,67 @@ interface Serial0/0/1
 !
 router ospf 100
  passive-interface GigabitEthernet0/1
- network 10.0.0.0 0.0.0.3 area 0
- network 10.0.0.8 0.0.0.3 area 0
- network 172.20.8.0 0.0.3.255 area 0
+ network 10.0.0.2 0.0.0.0 area 0
+ network 10.0.0.9 0.0.0.0 area 0
+ network 172.20.9.1 0.0.0.0 area 0
+ network 172.20.10.1 0.0.0.0 area 0
+ network 172.20.10.129 0.0.0.0 area 0
+ network 172.20.11.1 0.0.0.0 area 0
+ network 172.20.11.97 0.0.0.0 area 0
+ network 172.20.11.105 0.0.0.0 area 0
  default-information originate
 !
+ip default-gateway 172.16.201.254
 ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
 !
 ip nat inside source list 1 interface GigabitEthernet0/2 overload
-ip route 0.0.0.0 0.0.0.0 172.16.201.254
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/2
 !
+ip access-list standard SNMP-ACL
+ permit 172.20.7.40
+ deny   any
+ip access-list standard SSH-ACL
+ permit 172.20.7.108 0.0.0.3
+ permit 172.20.7.104 0.0.0.3
+ permit 10.0.0.0 0.0.0.3
+ permit 10.0.0.4 0.0.0.3
+ permit 10.0.0.8 0.0.0.3
+ permit 172.20.11.104 0.0.0.7
+ permit 172.20.13.232 0.0.0.7
+ permit 172.20.7.0 0.0.0.31
+ permit 172.20.10.128 0.0.0.127
+ permit 172.20.4.0 0.0.0.255
+ permit 172.20.5.0 0.0.0.255
+ permit 172.20.12.0 0.0.1.255
+ deny   any
 !
-!
-ip access-list extended CRYPTO-ACL-ZAGREB
+ip access-list extended CRYPTO-ACL-PULA
  permit gre host 172.16.201.77 host 172.16.201.80
- deny ip any any
+ deny   ip any any
 ip access-list extended CRYPTO-ACL-SPLIT
- permit gre host 172.16.201.77 host 172.16.201.78
- deny ip any any
+ permit gre host 172.16.201.77 host 172.16.201.79
+ deny   ip any any
+ip access-list extended GUESTS_NET
+ remark GUEST networks must only have access to the Internet 
+ deny   ip any 10.0.0.0 0.255.255.255
+ deny   ip any 172.16.0.0 0.15.255.255
+ deny   ip any 192.168.0.0 0.0.255.255
+ permit ip any any
+ip access-list extended VOIP_NET
+ remark VoIP network must not have access to the Internet
+ permit ip any 10.0.0.0 0.255.255.255
+ permit ip any 172.16.0.0 0.15.255.255
+ permit ip any 192.168.0.0 0.0.255.255
+ deny   ip any any
+!
+logging facility local6
+logging host 172.20.7.40
+!
+!
+snmp-server community cisco RO SNMP-ACL
 access-list 1 permit 172.20.8.0 0.0.3.255
 !
 control-plane
@@ -300,6 +345,21 @@ mgcp profile default
 !
 !
 !
+dial-peer voice 3001 voip
+ description OUTGOING CALLS SPLIT
+ destination-pattern 3001
+ session target ipv4:10.0.0.10
+!
+dial-peer voice 1001 voip
+ description OUTGOING CALLS ZAGREB
+ destination-pattern 1001
+ session target ipv4:172.20.7.36
+!
+dial-peer voice 1002 voip
+ description OUTGOING CALLS ZAGREB
+ destination-pattern 1002
+ session target ipv4:172.20.7.36
+!
 !
 !
 !
@@ -311,16 +371,30 @@ telephony-service
  max-ephones 58
  max-dn 128
  ip source-address 172.20.10.1 port 2000
- system message PULA-UP
+ system message VOIP_PULA
  cnf-file location flash:
  load 7912 CP7912080004SCCP080108A.sbin
  max-conferences 8 gain -6
  transfer-system full-consult
 !
 !
-banner motd $SECURITY WARNING: Unauthorized access is prohibited!$
+ephone-dn  1
+ number 2001
+!
+!
+ephone  1
+ device-security-mode none
+ description OUTGOING CALLS
+ mac-address 0015.63AC.AACD
+ type 7912
+ button  1:1
+!
+!
+!
+banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
+ login local
 line aux 0
 line 2
  no activation-character
@@ -329,11 +403,18 @@ line 2
  transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
  stopbits 1
 line vty 0 4
- exec-timeout 0 30
+ access-class SSH-ACL in
+ exec-timeout 60 0
+ login local
+ transport input ssh
+line vty 5 15
+ access-class SSH-ACL in
+ exec-timeout 60 0
  login local
  transport input ssh
 !
 scheduler allocate 20000 1000
+ntp server 10.0.0.1
+ntp server pnpntpserver.isepacademy.isep.ipp.pt
 !
 end
-

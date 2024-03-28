@@ -346,6 +346,364 @@ interface Vlan1
  no ip address
  shutdown
 !
+Building configuration...
+
+Current configuration : 13793 bytes
+!
+! Last configuration change at 17:25:25 UTC Wed Jan 31 2024 by cisco
+! NVRAM config last updated at 17:26:35 UTC Wed Jan 31 2024 by cisco
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MLS2-Zg
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
+!
+username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
+no aaa new-model
+switch 1 provision ws-c3750e-24pd
+system mtu routing 1500
+ip routing
+ip arp inspection vlan 10,20,30
+!
+!
+ip dhcp snooping vlan 10,20,30,40
+ip dhcp snooping information option allow-untrusted
+ip dhcp snooping
+no ip domain-lookup
+ip domain-name isepacademy.ccna.itn.com
+ip host SW2-Zg 172.20.7.2
+ip host SW1-Zg 172.20.7.1
+ip host SW1-St 172.20.13.234
+ip host SW1-Pl 172.20.11.106
+ip host RT1-Zg 172.20.7.105
+ip host RT1-St 172.20.13.233
+ip host RT1-Pl 172.20.11.105
+ip host MLS2-Zg 172.20.7.4
+ip host MLS1-Zg 172.20.7.3
+login block-for 300 attempts 3 within 120
+vtp mode transparent
+!
+!
+crypto pki trustpoint TP-self-signed-1963286784
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1963286784
+ revocation-check none
+ rsakeypair TP-self-signed-1963286784
+!
+!
+crypto pki certificate chain TP-self-signed-1963286784
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31393633 32383637 3834301E 170D3036 30313032 30303031 
+  32365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 39363332 
+  38363738 3430819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  81009F23 57BDDD8B 5B036FFE 7972F56F 6419548D 48CED640 DF920719 3FAE19A7 
+  9E494FA9 23AC568E 4C81C798 E2528D1F 3015EE16 673ECF99 E0B3A256 9B8C5A53 
+  4A06EF8B 50FB4336 D3A1AA9D 3D7B96D5 21FE028D FD84B751 0EAD84A6 4BE18176 
+  1516F91B 0CA83384 40B63F63 1405E9E3 57D219E3 375B5CF2 95A727A8 DF97637E 
+  F6D30203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 14976FB0 C99100FB C685770D 6753B6C0 17794108 DA301D06 
+  03551D0E 04160414 976FB0C9 9100FBC6 85770D67 53B6C017 794108DA 300D0609 
+  2A864886 F70D0101 05050003 8181008E D5AA8596 BCB9281D 0CF530E7 36AD1320 
+  9079DDF8 450EFEE9 4BF7D84B 4B980123 FC64749B 79AC6EE5 294078E4 74C7F3C5 
+  EFD77A18 1EA0F95A 00FD2726 3B2E63C9 1F6E179C 2001D64B E9E7C3EF 220785E6 
+  F38D4618 7F1B4A32 4FDD314C D066B932 3FDD4733 9C5D9A68 5476A8AF 9FE28DF1 
+  9052CCA4 7438CC37 AC0A7257 4D8F97
+  	quit
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 5-6,10,20,30 priority 28672
+spanning-tree vlan 40,50,60 priority 24576
+!
+!
+!
+!
+!
+!
+!
+!
+!
+vlan internal allocation policy ascending
+!
+vlan 5
+ name APs
+!
+vlan 6
+ name MANAGEMENT
+!
+vlan 7
+ name NATIVE
+!
+vlan 10
+ name SERVERS
+!
+vlan 20
+ name ADMINISTRATION
+!
+vlan 30
+ name STAFF
+!
+vlan 40
+ name VOIP
+!
+vlan 50
+ name WIRELESS
+!
+vlan 60
+ name GUESTS
+!
+vlan 99
+ name BLACKHOLE
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+!
+interface FastEthernet0
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface GigabitEthernet1/0/1
+ description Connection to RT1-Zg
+ no switchport
+ ip address 172.20.7.110 255.255.255.252
+ ipv6 address FE80::1:3 link-local
+ ipv6 address 2001:A:0:11::2/64
+!
+interface GigabitEthernet1/0/2
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ channel-group 1 mode on
+ ip dhcp snooping trust
+!
+interface GigabitEthernet1/0/3
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ channel-group 1 mode on
+ ip dhcp snooping trust
+!
+interface GigabitEthernet1/0/4
+ description Connection to SW1-Zg
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface GigabitEthernet1/0/5
+ description Connection to SW2-Zg
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface GigabitEthernet1/0/6
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/7
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/8
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/9
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/10
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/11
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/12
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/13
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/14
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/15
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/16
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/17
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/18
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/19
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/20
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/21
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/22
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/23
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/24
+ description Unused Interface
+ switchport access vlan 99
+ switchport trunk native vlan 7
+ switchport mode access
+ switchport nonegotiate
+ shutdown
+!
+interface GigabitEthernet1/0/25
+!
+interface GigabitEthernet1/0/26
+!
+interface GigabitEthernet1/0/27
+!
+interface GigabitEthernet1/0/28
+!
+interface TenGigabitEthernet1/0/1
+!
+interface TenGigabitEthernet1/0/2
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
 interface Vlan5
  description Access Point VLAN
  ip address 172.20.7.66 255.255.255.224
@@ -389,6 +747,7 @@ interface Vlan30
 interface Vlan40
  description VoIP VLAN
  ip address 172.20.0.2 255.255.254.0
+ ip access-group VOIP_NET in
  ip helper-address 172.20.7.36
  standby 40 ip 172.20.0.3
  standby 40 priority 150
@@ -409,6 +768,7 @@ interface Vlan50
 interface Vlan60
  description Guest VLAN
  ip address 172.20.6.2 255.255.255.0
+ ip access-group GUESTS_NET in
  ip helper-address 172.20.7.36
  standby 60 ip 172.20.6.3
  standby 60 priority 150
@@ -424,26 +784,60 @@ router ospf 100
  network 172.20.7.110 0.0.0.0 area 0
  network 172.20.0.0 0.0.7.255 area 0
 !
-no ip http server
-no ip http secure-server
+ip http server
+ip http secure-server
 !
 !
+ip access-list standard SNMP-ACL
+ permit 172.20.7.40
+ deny   any
+ip access-list standard SSH-ACL
+ permit 172.20.7.108 0.0.0.3
+ permit 172.20.7.104 0.0.0.3
+ permit 10.0.0.0 0.0.0.3
+ permit 10.0.0.4 0.0.0.3
+ permit 10.0.0.8 0.0.0.3
+ permit 172.20.11.104 0.0.0.7
+ permit 172.20.13.232 0.0.0.7
+ permit 172.20.7.0 0.0.0.31
+ permit 172.20.10.128 0.0.0.127
+ permit 172.20.4.0 0.0.0.255
+ permit 172.20.5.0 0.0.0.255
+ permit 172.20.12.0 0.0.1.255
+ deny   any
 !
+ip access-list extended GUESTS_NET
+ remark GUEST networks must only have access to the Internet 
+ deny   ip any 10.0.0.0 0.255.255.255
+ deny   ip any 172.16.0.0 0.15.255.255
+ deny   ip any 192.168.0.0 0.0.255.255
+ permit ip any any
+ip access-list extended VOIP_NET
+ remark VoIP network must not have access to the Internet
+ permit ip any 10.0.0.0 0.255.255.255
+ permit ip any 172.16.0.0 0.15.255.255
+ permit ip any 192.168.0.0 0.0.255.255
+ deny   ip any any
 !
+logging facility local6
+logging host 172.20.7.40
 !
+snmp-server community cisco RO SNMP-ACL
 !
-!
+banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
  login local
 line vty 0 4
+ access-class SSH-ACL in
  exec-timeout 60 0
  login local
  transport input ssh
 line vty 5 15
+ access-class SSH-ACL in
  exec-timeout 60 0
  login local
  transport input ssh
 !
+ntp server 172.16.201.55
 end
-
