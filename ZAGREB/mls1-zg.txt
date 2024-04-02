@@ -491,5 +491,5 @@ line vty 5 15
  login local
  transport input ssh
 !
-ntp server 172.16.201.55
+ntp server 172.16.201.80
 end

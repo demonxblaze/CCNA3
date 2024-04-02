@@ -353,6 +353,10 @@ ip access-list standard SSH-ACL
  permit 172.20.12.0 0.0.1.255
  deny   any
 !
+!
+logging facility local6
+logging host 172.20.7.40
+!
 snmp-server community cisco RO SNMP-ACL
 !
 vstack

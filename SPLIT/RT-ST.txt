@@ -313,6 +313,9 @@ ip access-list extended crypto-acl-zagreb
  deny   ip any any
 !
 !
+logging facility local6
+logging host 172.20.7.40
+!
 !
 snmp-server community cisco RO SNMP-ACL
 access-list 1 permit 172.20.12.0 0.0.1.255
