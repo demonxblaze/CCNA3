@@ -1,3 +1,9 @@
+!
+! Last configuration change at 19:57:52 UTC Wed Apr 3 2024 by cisco
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
 service password-encryption
 !
 hostname DHCP-SRV
@@ -51,6 +57,7 @@ ip dhcp pool VOIP
  domain-name isepacademy.isep.ipp.pt
  dns-server 193.136.60.10 193.136.60.2
  option 150 ip 172.20.7.36
+ lease 40
 !
 ip dhcp pool WIRELESS
  network 172.20.2.0 255.255.254.0
@@ -108,6 +115,7 @@ license boot module c2900 technology-package securityk9
 license boot module c2900 technology-package uck9
 !
 !
+vtp mode transparent
 username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
 redundancy
@@ -171,6 +179,7 @@ ip route 0.0.0.0 0.0.0.0 172.20.7.35
 !
 !
 !
+snmp-server community cisco RO
 !
 control-plane
 !
@@ -215,7 +224,6 @@ telephony-service
  load 7912 CP7912080004SCCP080108A.sbin
  max-conferences 8 gain -6
  transfer-system full-consult
- create cnf-files version-stamp Jan 01 2002 00:00:00
 !
 !
 ephone-dn  1
@@ -243,10 +251,7 @@ ephone  2
 !
 !
  vstack
-!
-snmp-server community cisco RO
-!
-banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
+banner motd ^CCSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
  login local

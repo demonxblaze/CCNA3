@@ -1,10 +1,5 @@
-Building configuration...
-
-
-Current configuration : 10397 bytes
 !
-! Last configuration change at 17:27:34 UTC Wed Jan 31 2024 by cisco
-! NVRAM config last updated at 17:26:32 UTC Wed Jan 31 2024 by cisco
+! No configuration change since last restart
 !
 version 15.4
 service timestamps debug datetime msec
@@ -44,27 +39,29 @@ ip dhcp excluded-address 172.20.13.129
 !
 ip dhcp pool STAFF
  network 172.20.12.0 255.255.255.128
- default-router 172.20.12.1 
+ default-router 172.20.12.1
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 
+ dns-server 193.136.60.10
 !
 ip dhcp pool WIRELESS
  network 172.20.12.128 255.255.255.128
- default-router 172.20.12.129 
+ default-router 172.20.12.129
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 
+ dns-server 193.136.60.10
 !
 ip dhcp pool GUEST
  network 172.20.13.192 255.255.255.224
- default-router 172.20.13.193 
+ default-router 172.20.13.193
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 
+ dns-server 193.136.60.10
 !
 ip dhcp pool VOIP
  network 172.20.13.64 255.255.255.192
- default-router 172.20.13.65 
+ default-router 172.20.13.65
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10 
+ dns-server 193.136.60.10
+ option 150 ip 172.20.13.65
+ lease 40
 !
 !
 !
@@ -107,6 +104,7 @@ license boot module c2900 technology-package securityk9
 license boot module c2900 technology-package uck9
 !
 !
+vtp mode transparent
 username cisco privilege 15 secret 5 $1$mERr$UIEd/gKB8Xu9v11aSkZ1n0
 !
 redundancy
@@ -116,28 +114,28 @@ redundancy
 !
 !
 ip ssh version 2
-! 
+!
 !
 crypto isakmp policy 100
  encr aes
  authentication pre-share
  group 5
-crypto isakmp key Pvl4$pl1t address 172.16.201.77  
-crypto isakmp key z4gr3b$pl1t address 172.16.201.80  
+crypto isakmp key Pvl4$pl1t address 172.16.201.77
+crypto isakmp key z4gr3b$pl1t address 172.16.201.80
 !
 !
-crypto ipsec transform-set TSET esp-3des esp-sha-hmac 
+crypto ipsec transform-set TSET esp-3des esp-sha-hmac
  mode tunnel
 !
 !
 !
-crypto map CROATIA 20 ipsec-isakmp 
+crypto map CROATIA 20 ipsec-isakmp
  set peer 172.16.201.77
- set transform-set TSET 
+ set transform-set TSET
  match address crypto-acl-pula
-crypto map CROATIA 30 ipsec-isakmp 
+crypto map CROATIA 30 ipsec-isakmp
  set peer 172.16.201.80
- set transform-set TSET 
+ set transform-set TSET
  match address crypto-acl-zagreb
 !
 !
@@ -294,7 +292,7 @@ ip access-list standard SSH-ACL
  deny   any
 !
 ip access-list extended GUESTS_NET
- remark GUEST networks must only have access to the Internet 
+ remark GUEST networks must only have access to the Internet
  deny   ip any 10.0.0.0 0.255.255.255
  deny   ip any 172.16.0.0 0.15.255.255
  deny   ip any 192.168.0.0 0.0.255.255
@@ -311,7 +309,6 @@ ip access-list extended crypto-acl-pula
 ip access-list extended crypto-acl-zagreb
  permit gre host 172.16.201.79 host 172.16.201.80
  deny   ip any any
-!
 !
 logging facility local6
 logging host 172.20.7.40
@@ -369,7 +366,6 @@ telephony-service
  load 7912 CP7912080004SCCP080108A.SBIN
  max-conferences 8 gain -6
  transfer-system full-consult
- create cnf-files version-stamp 7960 Jan 31 2024 11:58:47
 !
 !
 ephone-dn  1
@@ -388,7 +384,7 @@ ephone  1
 !
 !
 !
-banner motd ^CSECURITY WARNING: Unauthorized access is prohibited!^C
+banner motd ^CCSECURITY WARNING: Unauthorized access is prohibited!^C
 !
 line con 0
  login local
@@ -410,5 +406,7 @@ line vty 5 15
 !
 scheduler allocate 20000 1000
 ntp server 10.0.0.5
+ntp server pnpntpserver.isepacademy.isep.ipp.pt
 !
 end
+
