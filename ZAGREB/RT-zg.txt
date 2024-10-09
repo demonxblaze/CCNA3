@@ -7,7 +7,6 @@ Current configuration : 7883 bytes
 ! NVRAM config last updated at 12:54:13 UTC Wed Jan 31 2024 by cisco
 !
 version 15.4
-service config
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
@@ -285,8 +284,7 @@ line vty 5 15
  transport input ssh
 !
 scheduler allocate 20000 1000
-ntp server 162.159.200.1
-ntp server pnpntpserver.isepacademy.isep.ipp.pt
+
 ntp server pt.pool.ntp.org
 ntp server 0.pool.ntp.org
 !
