@@ -10,3 +10,4 @@ router ospf 100
  network 172.20.11.105 0.0.0.0 area 0
  default-information originate
 !
+
