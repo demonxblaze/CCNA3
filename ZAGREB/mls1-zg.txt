@@ -461,7 +461,7 @@ ip access-list extended GUESTS_NET
 ip access-list extended VOIP_NET
  remark VoIP network must not have access to the Internet
  permit ip any 10.0.0.0 0.255.255.255
- permit ip any 172.16.0.0 0.15.255.255
+ permit ip any 172.16.0.0 0.15.255.255 
  permit ip any 192.168.0.0 0.0.255.255
  deny   ip any any
 !
