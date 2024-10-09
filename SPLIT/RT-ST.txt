@@ -41,25 +41,25 @@ ip dhcp pool STAFF
  network 172.20.12.0 255.255.255.128
  default-router 172.20.12.1
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10
+ dns-server 193.136.60.10 193.136.60.2
 !
 ip dhcp pool WIRELESS
  network 172.20.12.128 255.255.255.128
  default-router 172.20.12.129
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10
+ dns-server 193.136.60.10 193.136.60.2
 !
 ip dhcp pool GUEST
  network 172.20.13.192 255.255.255.224
  default-router 172.20.13.193
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10
+ dns-server 193.136.60.10 193.136.60.2
 !
 ip dhcp pool VOIP
  network 172.20.13.64 255.255.255.192
  default-router 172.20.13.65
  domain-name isepacademy.ccna.itn.com
- dns-server 193.136.60.10
+ dns-server 193.136.60.10 193.136.60.2
  option 150 ip 172.20.13.65
  lease 40
 !
@@ -369,11 +369,11 @@ telephony-service
 !
 !
 ephone-dn  1
- number 3001
+ number 4001
 !
 !
 ephone-dn  2
- number 3002
+ number 4002
 !
 !
 ephone  1
