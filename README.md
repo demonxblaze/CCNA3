@@ -15,11 +15,10 @@ Everything was done in a physical Lab and this repository contains all the confi
 - IPSec Tunnels
 - ACL's
 - SSH
-- Syslog and SNMP (LibreNMS)
+- [Syslog and SNMP (LibreNMS)](Docs/Syslog.md)
 - LACP Etherchannel
 - DHCP
 - DHCP Snooping
 - HSRP
 - Static and Dynamic NAT
-- Configuration Backup With Ansible
 - Multi-Location Wireless Deployment with WLC
