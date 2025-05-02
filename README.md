@@ -12,7 +12,7 @@ Everything was done in a physical Lab and this repository contains all the confi
 - [Single Area OSPF](Docs/OSPF.md)
 - [VoIP](Docs/VoIP.md)
 - NTP
-- IPSec Tunnels
+- [IPSec Tunnels](Docs/IPSec.md)
 - ACL's
 - SSH
 - [Syslog and SNMP (LibreNMS)](Docs/Syslog.md)
@@ -20,5 +20,5 @@ Everything was done in a physical Lab and this repository contains all the confi
 - [DHCP](Docs/DHCP.md)
 - DHCP Snooping
 - HSRP
-- Static and Dynamic NAT
+- NAT
 - Multi-Location Wireless Deployment with WLC
