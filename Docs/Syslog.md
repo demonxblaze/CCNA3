@@ -12,18 +12,17 @@ SNMP was configured in every network device to allow monitoring with LibreNMS.
 
 All devices were configured with community string "cisco" in read-only mode.
 
-
 ```bash	
 snmp-server community cisco RO SNMP-ACL 
 ```
 
 The SNMP-ACL is an ACL that allows only the LibreNMS server to access the SNMP service.
 
-### LibreNMS
+## LibreNMS
 
 LibreNMS is an open-source network monitoring system that provides a web interface for monitoring network devices. It is capable of monitoring a wide range of devices, including routers, switches, servers, and printers. LibreNMS can be used to monitor network performance, detect network outages, and generate reports on network activity.
 
-LibreNMS was installed in a PC running a VM with Ubuntu Server 22. The installation was done following the official documentation.
+LibreNMS was installed in a PC running a VM with Ubuntu Server 22.04. The installation was done following the official documentation.
 
 The LibreNMS server was configured to monitor all network devices using SNMPv2. The SNMP community string "cisco" was used to authenticate the devices.
 

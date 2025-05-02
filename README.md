@@ -2,7 +2,7 @@
 
 This project was done for the CCNA ENSA Course.
 
-Everything was done in a physical Lab and this repository contains all the configurations done in the equipements in text files.
+Everything was done in a physical Lab and this repository contains all the configurations applied to the equipements in text files.
 
 ## Services/Technologies Configurated
 
@@ -10,7 +10,7 @@ Everything was done in a physical Lab and this repository contains all the confi
 - RSTP
 - BPDU Guard
 - [Single Area OSPF](Docs/OSPF.md)
-- VoIP
+- [VoIP](Docs/VoIP.md)
 - NTP
 - IPSec Tunnels
 - ACL's
