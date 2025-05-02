@@ -6,7 +6,7 @@ Everything was done in a physical Lab and this repository contains all the confi
 
 ## Services/Technologies Configurated
 
-- VTP
+- VLANs
 - RSTP
 - BPDU Guard
 - [Single Area OSPF](Docs/OSPF.md)
@@ -17,7 +17,7 @@ Everything was done in a physical Lab and this repository contains all the confi
 - SSH
 - [Syslog and SNMP (LibreNMS)](Docs/Syslog.md)
 - LACP Etherchannel
-- DHCP
+- [DHCP](Docs/DHCP.md)
 - DHCP Snooping
 - HSRP
 - Static and Dynamic NAT
