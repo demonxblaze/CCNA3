@@ -8,14 +8,6 @@ Simple Network Management Protocol (SNMP) is a standard protocol for managing an
 
 SNMP was configured in every network device to allow monitoring with LibreNMS.
 
-### Configuration
-
-All devices were configured with community string "cisco" in read-only mode.
-
-```bash	
-snmp-server community cisco RO SNMP-ACL 
-```
-
 The SNMP-ACL is an ACL that allows only the LibreNMS server to access the SNMP service.
 
 ## LibreNMS
@@ -30,7 +22,13 @@ The LibreNMS server was configured to monitor all network devices using SNMPv2. 
 
 Syslog is a standard for message logging. It allows separation of the software that generates messages, the system that stores them, and the software that reports and analyzes them.
 
-### Configuration
+## Configuration 
+
+All devices were configured with community string "cisco" in read-only mode.
+
+```bash
+snmp-server community cisco RO SNMP-ACL 
+```
 
 All devices were configured to send syslog messages to the LibreNMS server.
 

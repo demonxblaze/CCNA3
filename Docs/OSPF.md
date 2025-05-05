@@ -22,7 +22,7 @@ To estabilish the routes between sites, OSPF was configured to propagate the IPS
  default-information originate
 ```
 
-### Split Router:
+### Split Router
 
 ```bash
  network 10.0.0.10 0.0.0.0 area 0
@@ -31,7 +31,7 @@ To estabilish the routes between sites, OSPF was configured to propagate the IPS
  default-information originate
 ```
 
-### Pula Router:
+### Pula Router
 
 ```bash
  network 10.0.0.2 0.0.0.0 area 0
@@ -40,7 +40,7 @@ To estabilish the routes between sites, OSPF was configured to propagate the IPS
  default-information originate
 ```
 
-### Zagreb MLS's:
+### Zagreb MLS's
 
 To provide redundancy in the network, and intervlan routing, the MLS's were also configured with OSPF.
 
