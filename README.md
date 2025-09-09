@@ -6,19 +6,19 @@ Everything was done in a physical Lab and this repository contains all the confi
 
 ## Services/Technologies Configurated
 
-- VLANs
-- RSTP
-- BPDU Guard
+- [VLANs](Docs/VLANs.md)
+- [RSTP (Rapid Spanning Tree Protocol)](Docs/RSTP.md)
+- BPDU Guard (covered in RSTP documentation)
 - [Single Area OSPF](Docs/OSPF.md)
 - [VoIP](Docs/VoIP.md)
-- NTP
+- [NTP (Network Time Protocol)](Docs/NTP.md)
 - [IPSec Tunnels](Docs/IPSec.md)
-- ACL's
-- SSH
+- [ACLs (Access Control Lists)](Docs/ACLs.md)
+- [SSH (Secure Shell)](Docs/SSH.md)
 - [Syslog and SNMP (LibreNMS)](Docs/Syslog.md)
-- LACP Etherchannel
+- [LACP EtherChannel](Docs/EtherChannel.md)
 - [DHCP](Docs/DHCP.md)
-- DHCP Snooping
-- HSRP
-- NAT
+- [DHCP Snooping](Docs/DHCP-Snooping.md)
+- [HSRP (Hot Standby Router Protocol)](Docs/HSRP.md)
+- [NAT (Network Address Translation)](Docs/NAT.md)
 - Multi-Location Wireless Deployment with WLC
